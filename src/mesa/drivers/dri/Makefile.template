@@ -1,5 +1,7 @@
 # -*-makefile-*-
 
+MESA_MODULES = $(TOP)/src/mesa/libmesa.a $(TOP)/lib/libGL.dll.a
+
 COMMON_GALLIUM_SOURCES = \
         ../common/utils.c \
         ../common/vblank.c \
