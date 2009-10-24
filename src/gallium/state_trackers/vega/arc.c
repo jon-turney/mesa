@@ -35,10 +35,6 @@
 #include "util/u_debug.h"
 #include "util/u_math.h"
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
 #define DEBUG_ARCS 0
 
 static const VGfloat two_pi = M_PI * 2;
