@@ -183,6 +183,23 @@ fi
 AC_SUBST([VISIBILITY_CFLAGS])
 AC_SUBST([VISIBILITY_CXXFLAGS])
 
+dnl check for M_PI
+AC_MSG_CHECKING(for M_PI in math.h)
+mpi=no
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <math.h>], [ double f = M_PI ])],
+                                   [mpi=yes])
+if test "$mpi" = no; then
+SAVE_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -U__STRICT_ANSI__"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <math.h>], [ double f = M_PI ])],
+                                   [mpi="yes, with -U__STRICT_ANSI__"],
+                                   [CFLAGS="$SAVE_CFLAGS"])
+fi
+if test "$mpi" = no; then
+AC_MSG_ERROR([Can't work out how to make <math.h> define M_PI])
+fi
+AC_MSG_RESULT([$mpi])
+
 dnl These should be unnecessary, but let the user set them if they want
 AC_ARG_VAR([OPT_FLAGS], [Additional optimization flags for the compiler.
     Default is to use CFLAGS.])
