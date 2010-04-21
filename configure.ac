@@ -573,6 +573,22 @@ else
     enable_xcb=no
 fi
 
+dnl is DRM expected on the target platform?
+case "$host_os" in
+linux*|*-gnu*|gnu*)
+    no_drm_is_fatal=yes
+    ;;
+solaris*)
+    no_drm_is_fatal=yes
+    ;;
+cygwin*)
+    no_drm_is_fatal=no
+    ;;
+darwin* )
+    no_drm_is_fatal=no
+    ;;
+esac
+
 dnl
 dnl libGL configuration per driver
 dnl
@@ -607,11 +623,18 @@ dri)
     fi
 
     # Check for libdrm
-    PKG_CHECK_MODULES([LIBDRM], [libdrm >= $LIBDRM_REQUIRED])
+    PKG_CHECK_MODULES([LIBDRM], [libdrm >= $LIBDRM_REQUIRED], HAVE_LIBDRM=yes, HAVE_LIBDRM=no)
     PKG_CHECK_MODULES([DRI2PROTO], [dri2proto >= $DRI2PROTO_REQUIRED])
     PKG_CHECK_MODULES([GLPROTO], [glproto >= $GLPROTO_REQUIRED])
-    GL_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED dri2proto >= $DRI2PROTO_REQUIRED glproto >= $GLPROTO_REQUIRED"
-    DRI_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED"
+
+    if test "$HAVE_LIBDRM" = no; then
+        if test "$no_drm_is_fatal" = yes; then
+            AC_MSG_ERROR([LIBDRM $LIBDRM_REQUIRED is required by DRI driver])
+        fi
+    else
+        GL_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED dri2proto >= $DRI2PROTO_REQUIRED glproto >= $GLPROTO_REQUIRED"
+        DRI_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED"
+    fi
 
     # find the DRI deps for libGL
     if test "$x11_pkgconfig" = yes; then
@@ -851,6 +874,10 @@ if test "$mesa_driver" = dri; then
         if test "x$driglx_direct" = xyes; then
             DEFINES="$DEFINES -DGLX_DIRECT_RENDERING"
         fi
+        ;;
+    cygwin*)
+        DEFINES="$DEFINES -DUSE_EXTERNAL_DXTN_LIB=1 -DIN_DRI_DRIVER"
+        DEFINES="$DEFINES -DGLX_INDIRECT_RENDERING"
         ;;
     esac
 
