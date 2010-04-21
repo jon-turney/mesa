@@ -46,7 +46,9 @@
 #define GC_IS_DIRECT(gc) ((gc)->isDirect)
 #else
 #include <sys/time.h>
+#ifdef XF86VIDMODE
 #include <X11/extensions/xf86vmode.h>
+#endif
 #include "xf86dri.h"
 #define GC_IS_DIRECT(gc) ((gc)->driContext != NULL)
 #endif
