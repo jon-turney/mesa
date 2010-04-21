@@ -41,7 +41,9 @@
 #include "glxclient.h"
 #include <X11/extensions/Xext.h>
 #include <X11/extensions/extutil.h>
+#ifdef HAVE_DRI2PROTO
 #include <X11/extensions/dri2proto.h>
+#endif
 #ifdef GLX_USE_APPLEGL
 #include "apple_glx.h"
 #include "apple_visual.h"

@@ -624,7 +624,7 @@ dri)
 
     # Check for libdrm
     PKG_CHECK_MODULES([LIBDRM], [libdrm >= $LIBDRM_REQUIRED], HAVE_LIBDRM=yes, HAVE_LIBDRM=no)
-    PKG_CHECK_MODULES([DRI2PROTO], [dri2proto >= $DRI2PROTO_REQUIRED])
+    PKG_CHECK_MODULES([DRI2PROTO], [dri2proto >= $DRI2PROTO_REQUIRED], HAVE_DRI2PROTO=yes, HAVE_DRI2PROTO=no)
     PKG_CHECK_MODULES([GLPROTO], [glproto >= $GLPROTO_REQUIRED])
 
     if test "$HAVE_LIBDRM" = no; then
@@ -634,6 +634,10 @@ dri)
     else
         GL_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED dri2proto >= $DRI2PROTO_REQUIRED glproto >= $GLPROTO_REQUIRED"
         DRI_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED"
+    fi
+
+    if test "$HAVE_DRI2PROTO" = yes; then
+        DEFINES="$DEFINES -DHAVE_DRI2PROTO"
     fi
 
     # find the DRI deps for libGL
