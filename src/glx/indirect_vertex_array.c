@@ -200,6 +200,7 @@ __glXInitVertexArrayState(__GLXcontext * gc)
       __indirect_glGetProgramivARB(GL_VERTEX_PROGRAM_ARB,
                                    GL_MAX_PROGRAM_ATTRIBS_ARB,
                                    &vertex_program_attribs);
+     vertex_program_attribs = 16;
    }
 
    arrays->num_texture_units = texture_units;
