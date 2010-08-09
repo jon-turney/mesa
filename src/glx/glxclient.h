@@ -492,6 +492,7 @@ struct glx_screen
    char *effectiveGLXexts;
 
    struct glx_display *display;
+   int scr;
 
    Display *dpy;
    int scr;

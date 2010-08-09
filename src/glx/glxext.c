@@ -718,7 +718,6 @@ glx_screen_init(struct glx_screen *psc,
    /* Initialize per screen dynamic client GLX extensions */
    psc->ext_list_first_time = GL_TRUE;
    psc->scr = screen;
-   psc->dpy = priv->dpy;
    psc->display = priv;
 
    getVisualConfigs(psc, priv, screen);

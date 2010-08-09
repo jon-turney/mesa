@@ -44,7 +44,7 @@ static void
 indirect_destroy_context(struct glx_context *gc)
 {
    if (!gc->imported && gc->xid)
-      glx_send_destroy_context(gc->psc->dpy, gc->xid);
+      glx_send_destroy_context(gc->psc->display->dpy, gc->xid);
 
    __glXFreeVertexArrayState(gc);
 
@@ -134,10 +134,10 @@ indirect_bind_context(struct glx_context *gc, struct glx_context *old,
    xGLXMakeCurrentReply reply;
    GLXContextTag tag;
    __GLXattribute *state;
-   Display *dpy = gc->psc->dpy;
+   Display *dpy = gc->psc->display->dpy;
    int opcode = __glXSetupForCommand(dpy);
 
-   if (old != &dummyContext && !old->isDirect && old->psc->dpy == dpy) {
+   if (old != &dummyContext && !old->isDirect && old->psc->display->dpy == dpy)
       tag = old->currentContextTag;
       old->currentContextTag = 0;
    } else {
@@ -164,7 +164,7 @@ indirect_bind_context(struct glx_context *gc, struct glx_context *old,
 static void
 indirect_unbind_context(struct glx_context *gc, struct glx_context *new)
 {
-   Display *dpy = gc->psc->dpy;
+   Display *dpy = gc->psc->display->dpy;
    int opcode = __glXSetupForCommand(dpy);
    xGLXMakeCurrentReply reply;
 
@@ -175,7 +175,7 @@ indirect_unbind_context(struct glx_context *gc, struct glx_context *new)
     * context to a direct context or from one dpy to another and have
     * to send a request to the dpy to unbind the previous context.
     */
-   if (!new || new->isDirect || new->psc->dpy != dpy) {
+   if (!new || new->isDirect || new->psc->display->dpy != dpy)
       SendMakeCurrentRequest(dpy, opcode, None,
 			     gc->currentContextTag, None, None, &reply);
       gc->currentContextTag = 0;
@@ -352,7 +352,7 @@ indirect_create_context(struct glx_screen *psc,
    CARD8 opcode;
    __GLXattribute *state;
 
-   opcode = __glXSetupForCommand(psc->dpy);
+   opcode = __glXSetupForCommand(psc->display->dpy);
    if (!opcode) {
       return NULL;
    }
@@ -385,7 +385,7 @@ indirect_create_context(struct glx_screen *psc,
     ** packet for the GLXRenderReq header.
     */
 
-   bufSize = (XMaxRequestSize(psc->dpy) * 4) - sz_xGLXRenderReq;
+   bufSize = (XMaxRequestSize(psc->display->dpy) * 4) - sz_xGLXRenderReq;
    gc->buf = (GLubyte *) Xmalloc(bufSize);
    if (!gc->buf) {
       Xfree(gc->client_state_private);
