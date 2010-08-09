@@ -97,6 +97,10 @@ ChangeDrawableAttribute(Display * dpy, GLXDrawable drawable,
       return;
    }
 
+#ifdef GLX_DIRECT_RENDERING
+   pdraw = GetGLXDRIDrawable(dpy, drawable);
+#endif
+
    opcode = __glXSetupForCommand(dpy);
    if (!opcode)
       return;
