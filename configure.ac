@@ -151,9 +151,9 @@ if test "x$GCC" = xyes; then
     # Enable -fvisibility=hidden if using a gcc that supports it
     save_CFLAGS="$CFLAGS"
     AC_MSG_CHECKING([whether $CC supports -fvisibility=hidden])
-    VISIBILITY_CFLAGS="-fvisibility=hidden"
+    VISIBILITY_CFLAGS="-fvisibility=hidden -Werror -Wattributes"
     CFLAGS="$CFLAGS $VISIBILITY_CFLAGS"
-    AC_LINK_IFELSE([AC_LANG_PROGRAM()], AC_MSG_RESULT([yes]),
+    AC_LINK_IFELSE([AC_LANG_PROGRAM()], VISIBILITY_CFLAGS="-fvisibility=hidden"; AC_MSG_RESULT([yes]),
 		   [VISIBILITY_CFLAGS=""; AC_MSG_RESULT([no])]);
 
     # Restore CFLAGS; VISIBILITY_CFLAGS are added to it where needed.
@@ -168,10 +168,12 @@ if test "x$GXX" = xyes; then
     # Enable -fvisibility=hidden if using a gcc that supports it
     save_CXXFLAGS="$CXXFLAGS"
     AC_MSG_CHECKING([whether $CXX supports -fvisibility=hidden])
-    VISIBILITY_CXXFLAGS="-fvisibility=hidden"
+    VISIBILITY_CXXFLAGS="-fvisibility=hidden -Werror -Wattributes"
     CXXFLAGS="$CXXFLAGS $VISIBILITY_CXXFLAGS"
-    AC_LINK_IFELSE([AC_LANG_PROGRAM()], AC_MSG_RESULT([yes]),
+    AC_LANG_PUSH([C++])
+    AC_LINK_IFELSE([AC_LANG_PROGRAM()], VISIBILITY_CXXFLAGS="-fvisibility=hidden"; AC_MSG_RESULT([yes]),
 		   [VISIBILITY_CXXFLAGS="" ; AC_MSG_RESULT([no])]);
+    AC_LANG_POP([C++])
 
     # Restore CXXFLAGS; VISIBILITY_CXXFLAGS are added to it where needed.
     CXXFLAGS=$save_CXXFLAGS
