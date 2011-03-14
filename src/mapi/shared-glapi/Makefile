@@ -32,10 +32,10 @@ $(TOP)/$(LIB_DIR)/$(GLAPI_LIB_NAME): $(glapi_OBJECTS)
 $(glapi_OBJECTS): %.o: $(MAPI)/%.c
 	$(CC) -c $(glapi_CPPFLAGS) $(CFLAGS) $< -o $@
 
-$(glapi_SOURCES): glapi_mapi_tmp.h
+$(glapi_SOURCES): gen-es
 
-.PHONY: glapi_mapi_tmp.h
-glapi_mapi_tmp.h:
+.PHONY:
+gen-es:
 	@$(MAKE) -C $(GLAPI)/gen-es shared-glapi
 
 .PHONY: clean
