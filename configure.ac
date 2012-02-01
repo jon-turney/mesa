@@ -171,7 +171,7 @@ solaris*)
     DEFINES="$DEFINES -DPTHREADS -DSVR4"
     ;;
 cygwin*)
-    DEFINES="$DEFINES -DPTHREADS"
+    DEFINES="$DEFINES -DPTHREADS -U__STRICT_ANSI__"
     ;;
 esac
 

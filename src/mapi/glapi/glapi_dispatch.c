@@ -87,6 +87,7 @@
 /* those link to libglapi.a should provide the entry points */
 #define _GLAPI_SKIP_PROTO_ENTRY_POINTS
 #endif
+
 #include "glapi/glapitemp.h"
 
 #endif /* USE_X86_ASM */
