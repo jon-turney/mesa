@@ -25,6 +25,3 @@ AM_CPPFLAGS =							\
 
 all-local: libglapi.la
 	$(MKDIR_P) $(top_builddir)/$(LIB_DIR)
-	ln -f .libs/libglapi.so.0.0.0 $(top_builddir)/$(LIB_DIR)/libglapi.so.0.0.0
-	ln -sf libglapi.so.0.0.0 $(top_builddir)/$(LIB_DIR)/libglapi.so.0
-	ln -sf libglapi.so.0 $(top_builddir)/$(LIB_DIR)/libglapi.so

@@ -60,4 +60,3 @@ swrast_dri_la_LIBADD = \
 # a while by putting a link to the driver into /lib of the build tree.
 all-local: swrast_dri.la
 	$(MKDIR_P) $(top_builddir)/$(LIB_DIR);
-	ln -f .libs/swrast_dri.so $(top_builddir)/$(LIB_DIR)/swrast_dri.so;

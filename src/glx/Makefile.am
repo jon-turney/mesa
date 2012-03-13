@@ -109,8 +109,6 @@ lib@GL_LIB@_la_LDFLAGS = $(GL_LDFLAGS)
 # a while by putting a link to the driver into /lib of the build tree.
 all-local: lib@GL_LIB@.la
 	$(MKDIR_P) $(top_builddir)/$(LIB_DIR);
-	ln -f .libs/lib@GL_LIB@.so.1.2.0 $(top_builddir)/$(LIB_DIR)/lib@GL_LIB@.so.1
-	ln -sf lib@GL_LIB@.so.1 $(top_builddir)/$(LIB_DIR)/lib@GL_LIB@.so
 
 $(GLAPI_LIB):
 	@$(MAKE) -C $(TOP)/src/mapi/glapi

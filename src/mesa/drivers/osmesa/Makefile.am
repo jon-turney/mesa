@@ -44,7 +44,6 @@ lib@OSMESA_LIB@_la_LIBADD = \
 # a while by putting a link to the driver into /lib of the build tree.
 all-local: lib@OSMESA_LIB@.la
 	$(MKDIR_P) $(top_builddir)/$(LIB_DIR);
-	ln -f .libs/lib@OSMESA_LIB@.so $(top_builddir)/$(LIB_DIR)/lib@OSMESA_LIB@.so;
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = osmesa.pc
