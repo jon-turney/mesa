@@ -33,9 +33,9 @@ ASM_SOURCES =
 
 # linkage bodge
 ifeq ($(SHARED_GLAPI),1)
-DRI_LIB_DEPS += $(TOP)/src/mapi/shared-glapi/.libs/libglapi.dll.a
+GALLIUM_DRI_LIB_DEPS += $(TOP)/src/mapi/shared-glapi/.libs/libglapi.dll.a
 else
-DRI_LIB_DEPS += $(TOP)/src/mapi/glapi/.libs/libglapi.a $(TOP)/src/glx/.libs/libGL.dll.a
+GALLIUM_DRI_LIB_DEPS += $(TOP)/src/mapi/glapi/.libs/libglapi.a $(TOP)/src/glx/.libs/libGL.dll.a
 endif
 
 include ../Makefile.dri

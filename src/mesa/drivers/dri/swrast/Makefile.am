@@ -42,10 +42,17 @@ if HAVE_SWRAST_DRI
 dri_LTLIBRARIES = swrast_dri.la
 endif
 
+# linkage bodge
+if HAVE_SHARED_GLAPI
+DRI_LIB_DEPS += $(top_builddir)/src/mapi/shared-glapi/libglapi.la
+else
+DRI_LIB_DEPS += $(top_builddir)/src/mapi/glapi/libglapi.la $(top_builddir)/src/glx/libGL.la
+endif
+
 swrast_dri_la_SOURCES = \
 	$(SWRAST_C_FILES)
 
-swrast_dri_la_LDFLAGS = -module -avoid-version -shared
+swrast_dri_la_LDFLAGS = -module -avoid-version -shared -no-undefined
 swrast_dri_la_LIBADD = \
 	$(DRI_LIB_DEPS)
 
