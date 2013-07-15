@@ -101,14 +101,16 @@ class glx_function(gl_XML.gl_function):
 
         self.server_handcode = 0
         self.client_handcode = 0
-        self.ignore = 0
 
         self.count_parameter_list = []
         self.counter_list = []
         self.parameters_by_name = {}
         self.offsets_calculated = 0
 
+        self.ignore = 0
         gl_XML.gl_function.__init__(self, element, context)
+        self.ignore = self.ignore or self.exec_flavor == 'skip'
+
         return
 
 
@@ -173,7 +175,7 @@ class glx_function(gl_XML.gl_function):
                 else:
                     raise RuntimeError('Invalid handcode mode "%s" in function "%s".' % (handcode, self.name))
 
-                self.ignore               = gl_XML.is_attr_true( child, 'ignore' )
+                self.ignore               = self.ignore or gl_XML.is_attr_true( child, 'ignore' )
                 self.can_be_large         = gl_XML.is_attr_true( child, 'large' )
                 self.glx_doubles_in_order = gl_XML.is_attr_true( child, 'doubles_in_order' )
                 self.reply_always_array   = gl_XML.is_attr_true( child, 'always_array' )
