@@ -5403,12 +5403,10 @@
         <param name="index" type="GLuint"/>
         <param name="name" type="const GLchar *"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
 
     <function name="CompileShader" es2="2.0" offset="assign">
         <param name="shader" type="GLuint"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
 
@@ -5604,7 +5602,6 @@
     <function name="LinkProgram" es2="2.0" offset="assign">
         <param name="program" type="GLuint"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
 
     <function name="ShaderSource" es2="2.0" offset="assign">
@@ -5613,12 +5610,10 @@
         <param name="string" type="const GLchar * const *"/>
         <param name="length" type="const GLint *"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
 
     <function name="UseProgram" es2="2.0" offset="assign">
         <param name="program" type="GLuint"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
 
@@ -5626,13 +5621,11 @@
         <param name="location" type="GLint"/>
         <param name="v0" type="GLfloat"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="Uniform2f" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="v0" type="GLfloat"/>
         <param name="v1" type="GLfloat"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="Uniform3f" es2="2.0" offset="assign">
@@ -5640,7 +5633,6 @@
         <param name="v0" type="GLfloat"/>
         <param name="v1" type="GLfloat"/>
         <param name="v2" type="GLfloat"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="Uniform4f" es2="2.0" offset="assign">
@@ -5650,13 +5642,11 @@
         <param name="v2" type="GLfloat"/>
         <param name="v3" type="GLfloat"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
 
     <function name="Uniform1i" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="v0" type="GLint"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="Uniform2i" es2="2.0" offset="assign">
@@ -5664,14 +5654,12 @@
         <param name="v0" type="GLint"/>
         <param name="v1" type="GLint"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="Uniform3i" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="v0" type="GLint"/>
         <param name="v1" type="GLint"/>
         <param name="v2" type="GLint"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="Uniform4i" es2="2.0" offset="assign">
@@ -5681,7 +5669,6 @@
         <param name="v2" type="GLint"/>
         <param name="v3" type="GLint"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
 
     <function name="Uniform1fv" es2="2.0" offset="assign">
@@ -5689,13 +5676,11 @@
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLfloat *" count="count"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="Uniform2fv" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLfloat *" count="count" count_scale="2"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="Uniform3fv" es2="2.0" offset="assign">
@@ -5703,13 +5688,11 @@
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLfloat *" count="count" count_scale="3"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="Uniform4fv" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLfloat *" count="count" count_scale="4"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
 
@@ -5718,13 +5701,11 @@
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLint *" count="count"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="Uniform2iv" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLint *" count="count" count_scale="2"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="Uniform3iv" es2="2.0" offset="assign">
@@ -5732,13 +5713,11 @@
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLint *" count="count" count_scale="3"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="Uniform4iv" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="count" type="GLsizei" counter="true"/>
         <param name="value" type="const GLint *" count="count" count_scale="4"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
 
@@ -5748,14 +5727,12 @@
         <param name="transpose" type="GLboolean"/>
         <param name="value" type="const GLfloat *" count="count" count_scale="4"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
     <function name="UniformMatrix3fv" es2="2.0" offset="assign">
         <param name="location" type="GLint"/>
         <param name="count" type="GLsizei" counter="true"/>
         <param name="transpose" type="GLboolean"/>
         <param name="value" type="const GLfloat *" count="count" count_scale="9"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
     <function name="UniformMatrix4fv" es2="2.0" offset="assign">
@@ -5764,12 +5741,10 @@
         <param name="transpose" type="GLboolean"/>
         <param name="value" type="const GLfloat *" count="count" count_scale="16"/>
         <glx ignore="true"/>
-        <glx ignore="true"/>
     </function>
 
     <function name="ValidateProgram" es2="2.0" offset="assign">
         <param name="program" type="GLuint"/>
-        <glx ignore="true"/>
         <glx ignore="true"/>
     </function>
 
