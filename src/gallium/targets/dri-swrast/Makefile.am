@@ -43,7 +43,7 @@ swrast_dri_la_SOURCES = \
 	$(top_srcdir)/src/mesa/drivers/dri/common/dri_util.c \
 	$(top_srcdir)/src/mesa/drivers/dri/common/xmlconfig.c
 
-swrast_dri_la_LDFLAGS = $(GALLIUM_DRI_LINKER_FLAGS)
+swrast_dri_la_LDFLAGS = $(GALLIUM_DRI_LINKER_FLAGS) -no-undefined
 
 swrast_dri_la_LIBADD = \
 	$(top_builddir)/src/gallium/state_trackers/dri/sw/libdrisw.la \
@@ -52,6 +52,12 @@ swrast_dri_la_LIBADD = \
 	$(top_builddir)/src/gallium/drivers/trace/libtrace.la \
 	$(top_builddir)/src/gallium/drivers/rbug/librbug.la \
 	$(GALLIUM_DRI_LIB_DEPS)
+
+if HAVE_SHARED_GLAPI
+swrast_dri_la_LIBADD += $(top_builddir)/src/mapi/shared-glapi/libglapi.la
+else
+swrast_dri_la_LIBADD += $(top_builddir)/src/mapi/glapi/libglapi.la
+endif
 
 if HAVE_MESA_LLVM
 AM_CPPFLAGS += -DGALLIUM_LLVMPIPE
