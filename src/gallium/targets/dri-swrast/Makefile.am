@@ -54,6 +54,12 @@ swrast_dri_la_LIBADD = \
 	$(top_builddir)/src/gallium/drivers/rbug/librbug.la \
 	$(GALLIUM_DRI_LIB_DEPS)
 
+if HAVE_SHARED_GLAPI
+swrast_dri_la_LIBADD += $(top_builddir)/src/mapi/shared-glapi/libglapi.la
+else
+swrast_dri_la_LIBADD += $(top_builddir)/src/mapi/glapi/libglapi.la
+endif
+
 nodist_EXTRA_swrast_dri_la_SOURCES = dummy.cpp
 
 if HAVE_MESA_LLVM
