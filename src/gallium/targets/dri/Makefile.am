@@ -23,6 +23,7 @@ nodist_EXTRA_gallium_dri_la_SOURCES = dummy.cpp
 gallium_dri_la_SOURCES =
 
 gallium_dri_la_LDFLAGS = \
+	-no-undefined \
 	-shared \
 	-shrext .so \
 	-module \
@@ -54,6 +55,12 @@ gallium_dri_la_LIBADD = \
 	$(EXPAT_LIBS) \
 	$(LIBDRM_LIBS) \
 	$(GALLIUM_COMMON_LIB_DEPS)
+
+if HAVE_SHARED_GLAPI
+gallium_dri_la_LIBADD += $(top_builddir)/src/mapi/shared-glapi/libglapi.la
+else
+gallium_dri_la_LIBADD += $(top_builddir)/src/mapi/glapi/libglapi.la
+endif
 
 # XXX: Temporary allow duplicated symbols, as the loader pulls in xmlconfig.c
 # which already provides driParse* and driQuery* amongst others.
