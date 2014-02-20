@@ -2176,41 +2176,6 @@ dnl in LLVM_LIBS.
 if test "x$MESA_LLVM" != x0; then
 
     LLVM_LIBS="`$LLVM_CONFIG --libs ${LLVM_COMPONENTS}`"
-
-    if test "x$enable_llvm_shared_libs" = xyes; then
-        dnl We can't use $LLVM_VERSION because it has 'svn' stripped out,
-        LLVM_SO_NAME=LLVM-`$LLVM_CONFIG --version`
-        AS_IF([test -f "$LLVM_LIBDIR/lib$LLVM_SO_NAME.so"], [llvm_have_one_so=yes])
-
-        if test "x$llvm_have_one_so" = xyes; then
-            dnl LLVM was built using auto*, so there is only one shared object.
-            LLVM_LIBS="-l$LLVM_SO_NAME"
-        else
-            dnl If LLVM was built with CMake, there will be one shared object per
-            dnl component.
-            AS_IF([test ! -f "$LLVM_LIBDIR/libLLVMTarget.so"],
-                    [AC_MSG_ERROR([Could not find llvm shared libraries:
-	Please make sure you have built llvm with the --enable-shared option
-	and that your llvm libraries are installed in $LLVM_LIBDIR
-	If you have installed your llvm libraries to a different directory you
-	can use the --with-llvm-prefix= configure flag to specify this directory.
-	NOTE: Mesa is attempting to use llvm shared libraries by default.
-	If you do not want to build with llvm shared libraries and instead want to
-	use llvm static libraries then add --disable-llvm-shared-libs to your configure
-	invocation and rebuild.])])
-
-           dnl We don't need to update LLVM_LIBS in this case because the LLVM
-           dnl install uses a shared object for each component and we have
-           dnl already added all of these objects to LLVM_LIBS.
-        fi
-    else
-        AC_MSG_WARN([Building mesa with statically linked LLVM may cause compilation issues])
-        dnl We need to link to llvm system libs when using static libs
-        dnl However, only llvm 3.5+ provides --system-libs
-        if test $LLVM_VERSION_MAJOR -eq 3 -a $LLVM_VERSION_MINOR -ge 5; then
-            LLVM_LIBS="$LLVM_LIBS `$LLVM_CONFIG --system-libs`"
-        fi
-    fi
 fi
 
 AM_CONDITIONAL(HAVE_GALLIUM_SVGA, test "x$HAVE_GALLIUM_SVGA" = xyes)
