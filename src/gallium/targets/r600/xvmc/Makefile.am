@@ -55,8 +55,4 @@ libXvMCr600_la_LINK = $(LINK) $(libXvMCr600_la_LDFLAGS)
 nodist_EXTRA_libXvMCr600_la_SOURCES = dummy-c.c
 endif
 
-# Provide compatibility with scripts for the old Mesa build system for
-# a while by putting a link to the driver into /lib of the build tree.
-all-local: libXvMCr600.la
-	$(MKDIR_P) $(top_builddir)/$(LIB_DIR)/gallium
-	ln -f .libs/libXvMCr600.so* $(top_builddir)/$(LIB_DIR)/gallium/
+include $(top_srcdir)/install-gallium-links.mk
