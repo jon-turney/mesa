@@ -71,8 +71,4 @@ libomx_r600_la_LINK = $(LINK) $(libomx_r600_la_LDFLAGS)
 nodist_EXTRA_libomx_r600_la_SOURCES = dummy-c.c
 endif
 
-# Provide compatibility with scripts for the old Mesa build system for
-# a while by putting a link to the driver into /lib of the build tree.
-all-local: libomx_r600.la
-	$(MKDIR_P) $(top_builddir)/$(LIB_DIR)/gallium
-	ln -f .libs/libomx_r600.so* $(top_builddir)/$(LIB_DIR)/gallium/
+include $(top_srcdir)/install-gallium-links.mk
