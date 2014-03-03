@@ -66,11 +66,8 @@ lib@OSMESA_LIB@_la_LIBADD += $(top_builddir)/src/gallium/drivers/llvmpipe/libllv
 endif
 
 
-
-if BUILD_SHARED
 if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
-endif
 endif
 
 pkgconfigdir = $(libdir)/pkgconfig
