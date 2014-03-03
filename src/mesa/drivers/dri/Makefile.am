@@ -51,7 +51,7 @@ driinclude_HEADERS = $(top_srcdir)/include/GL/internal/dri_interface.h
 nodist_EXTRA_mesa_dri_drivers_la_SOURCES = dummy.cpp
 mesa_dri_drivers_la_SOURCES =
 mesa_dri_drivers_la_LDFLAGS = \
-        -module -avoid-version -shared \
+        -module -avoid-version -shared -no-undefined \
         -Wl,-Bsymbolic \
         $()
 mesa_dri_drivers_la_LIBADD = \
@@ -61,6 +61,12 @@ mesa_dri_drivers_la_LIBADD = \
         $(MEGADRIVERS_DEPS) \
         $(DRI_LIB_DEPS) \
         $()
+
+if HAVE_SHARED_GLAPI
+mesa_dri_drivers_la_LIBADD += $(top_builddir)/src/mapi/shared-glapi/libglapi.la
+else
+mesa_dri_drivers_la_LIBADD += $(top_builddir)/src/mapi/glapi/libglapi.la
+endif
 
 if NEED_MEGADRIVER
 dri_LTLIBRARIES = mesa_dri_drivers.la
