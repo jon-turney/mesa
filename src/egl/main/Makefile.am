@@ -109,7 +109,9 @@ libEGL_la_LIBADD += ../drivers/dri2/libegl_dri2.la
 libEGL_la_LIBADD += $(DLOPEN_LIBS) $(LIBDRM_LIBS)
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 

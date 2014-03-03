@@ -72,4 +72,6 @@ libGL_la_LINK = $(CXXLINK) $(libGL_la_LDFLAGS)
 nodist_EXTRA_libGL_la_SOURCES = dummy-c.c
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

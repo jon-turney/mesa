@@ -76,4 +76,6 @@ else
 nodist_EXTRA_libxatracker_la_SOURCES = dummy-c.c
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif

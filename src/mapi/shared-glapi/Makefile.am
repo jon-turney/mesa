@@ -28,4 +28,6 @@ AM_CPPFLAGS =							\
 	-DMAPI_MODE_GLAPI					\
 	-DMAPI_ABI_HEADER=\"shared-glapi/glapi_mapi_tmp.h\"
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif

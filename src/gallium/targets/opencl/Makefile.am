@@ -51,4 +51,6 @@ icddir = /etc/OpenCL/vendors/
 icd_DATA = mesa.icd
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

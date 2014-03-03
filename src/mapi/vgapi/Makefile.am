@@ -53,4 +53,6 @@ vgapi_tmp.h: $(srcdir)/vgapi.csv $(top_srcdir)/src/mapi/mapi_abi.py
 BUILT_SOURCES = vgapi_tmp.h
 CLEANFILES = $(BUILT_SOURCES)
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif

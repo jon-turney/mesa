@@ -57,4 +57,6 @@ r300_dri_la_LDFLAGS += $(LLVM_LDFLAGS)
 r300_dri_la_LIBADD += $(LLVM_LIBS)
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

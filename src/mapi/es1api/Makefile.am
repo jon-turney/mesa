@@ -57,4 +57,6 @@ glapi_mapi_tmp.h: ../glapi/gen/gl_and_es_API.xml $(glapi_gen_mapi_deps)
 BUILT_SOURCES = glapi_mapi_tmp.h
 CLEANFILES = $(BUILT_SOURCES)
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif

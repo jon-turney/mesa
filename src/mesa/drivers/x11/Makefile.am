@@ -65,5 +65,7 @@ lib@GL_LIB@_la_LDFLAGS = \
 	$(GL_LIB_DEPS)
 
 if BUILD_SHARED
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif
 endif

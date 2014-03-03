@@ -46,4 +46,6 @@ endif
 
 TESTS = gbm-symbols-check
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif

@@ -116,4 +116,6 @@ lib@GL_LIB@_la_SOURCES =
 lib@GL_LIB@_la_LIBADD = $(GL_LIBS)
 lib@GL_LIB@_la_LDFLAGS = $(GL_LDFLAGS)
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif

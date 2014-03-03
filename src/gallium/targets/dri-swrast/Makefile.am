@@ -62,4 +62,6 @@ swrast_dri_la_LDFLAGS += $(LLVM_LDFLAGS)
 swrast_dri_la_LIBADD += $(top_builddir)/src/gallium/drivers/llvmpipe/libllvmpipe.la $(LLVM_LIBS)
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

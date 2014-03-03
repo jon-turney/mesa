@@ -55,4 +55,6 @@ libXvMCr600_la_LINK = $(LINK) $(libXvMCr600_la_LDFLAGS)
 nodist_EXTRA_libXvMCr600_la_SOURCES = dummy-c.c
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

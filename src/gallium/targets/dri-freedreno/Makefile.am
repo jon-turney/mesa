@@ -63,4 +63,6 @@ msm_dri_la_SOURCES  = target-msm.c
 msm_dri_la_LDFLAGS  = $(COMMON_LDFLAGS)
 msm_dri_la_LIBADD   = $(COMMON_LIBADD)
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

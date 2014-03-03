@@ -48,7 +48,9 @@ lib@OSMESA_LIB@_la_LIBADD = \
 	$(OSMESA_LIB_DEPS)
 
 if BUILD_SHARED
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-lib-links.mk
+endif
 endif
 
 pkgconfigdir = $(libdir)/pkgconfig

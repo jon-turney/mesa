@@ -71,4 +71,6 @@ libomx_r600_la_LINK = $(LINK) $(libomx_r600_la_LDFLAGS)
 nodist_EXTRA_libomx_r600_la_SOURCES = dummy-c.c
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

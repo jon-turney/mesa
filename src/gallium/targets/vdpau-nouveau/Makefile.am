@@ -49,4 +49,6 @@ libvdpau_nouveau_la_LDFLAGS += $(LLVM_LDFLAGS)
 libvdpau_nouveau_la_LIBADD += $(LLVM_LIBS)
 endif
 
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif

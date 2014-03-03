@@ -68,7 +68,9 @@ endif
 
 
 if BUILD_SHARED
+if HAVE_COMPAT_SYMLINKS
 include $(top_srcdir)/install-gallium-links.mk
+endif
 endif
 
 pkgconfigdir = $(libdir)/pkgconfig
