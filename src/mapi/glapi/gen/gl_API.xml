@@ -11606,8 +11606,7 @@
     <enum name="MAP2_VERTEX_ATTRIB14_4_NV"                value="0x867E"/>
     <enum name="MAP2_VERTEX_ATTRIB15_4_NV"                value="0x867F"/>
 
-    <function name="AreProgramsResidentNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="AreProgramsResidentNV" offset="assign" deprecated="3.1">
         <param name="n" type="GLsizei" counter="true"/>
         <param name="ids" type="const GLuint *" count="n"/>
         <param name="residences" type="GLboolean *" output="true" count="n"/>
@@ -11662,24 +11661,21 @@
         <glx vendorpriv="1296"/>
     </function>
 
-    <function name="GetProgramivNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="GetProgramivNV" offset="assign" deprecated="3.1">
         <param name="id" type="GLuint"/>
         <param name="pname" type="GLenum"/>
         <param name="params" type="GLint *" output="true" variable_param="pname"/>
         <glx vendorpriv="1298"/>
     </function>
 
-    <function name="GetProgramStringNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="GetProgramStringNV" offset="assign" deprecated="3.1">
         <param name="id" type="GLuint"/>
         <param name="pname" type="GLenum"/>
         <param name="program" type="GLubyte *" output="true"/>
         <glx vendorpriv="1299" handcode="server" always_array="true"/>
     </function>
 
-    <function name="GetTrackMatrixivNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="GetTrackMatrixivNV" offset="assign" deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="address" type="GLuint"/>
         <param name="pname" type="GLenum"/>
@@ -11687,24 +11683,21 @@
         <glx vendorpriv="1300"/>
     </function>
 
-    <function name="GetVertexAttribdvNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="GetVertexAttribdvNV" offset="assign" deprecated="3.1">
         <param name="index" type="GLuint"/>
         <param name="pname" type="GLenum"/>
         <param name="params" type="GLdouble *" output="true" variable_param="pname"/>
         <glx vendorpriv="1301"/>
     </function>
 
-    <function name="GetVertexAttribfvNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="GetVertexAttribfvNV" offset="assign" deprecated="3.1">
         <param name="index" type="GLuint"/>
         <param name="pname" type="GLenum"/>
         <param name="params" type="GLfloat *" output="true" variable_param="pname"/>
         <glx vendorpriv="1302"/>
     </function>
 
-    <function name="GetVertexAttribivNV" offset="assign" deprecated="3.1"
-              exec="skip">
+    <function name="GetVertexAttribivNV" offset="assign" deprecated="3.1">
         <param name="index" type="GLuint"/>
         <param name="pname" type="GLenum"/>
         <param name="params" type="GLint *" output="true" variable_param="pname"/>
@@ -12581,7 +12574,7 @@
     </function>
 
     <function name="GetProgramNamedParameterfvNV" offset="assign"
-              deprecated="3.1" exec="skip">
+              deprecated="3.1">
         <param name="id" type="GLuint"/>
         <param name="len" type="GLsizei" counter="true"/>
         <param name="name" type="const GLubyte *" count="len"/>
@@ -12590,7 +12583,7 @@
     </function>
 
     <function name="GetProgramNamedParameterdvNV" offset="assign"
-              deprecated="3.1" exec="skip">
+              deprecated="3.1">
         <param name="id" type="GLuint"/>
         <param name="len" type="GLsizei" counter="true"/>
         <param name="name" type="const GLubyte *" count="len"/>
