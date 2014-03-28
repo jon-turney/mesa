@@ -4319,10 +4319,9 @@
     <enum name="DOT3_RGB"                                 value="0x86AE"/>
     <enum name="DOT3_RGBA"                                value="0x86AF"/>
 
-    <function name="ActiveTexture" es1="1.0"
-              es2="2.0" offset="374">
+    <function name="ActiveTexture" alias="ActiveTextureARB"
+              es1="1.0" es2="2.0">
         <param name="texture" type="GLenum"/>
-        <glx rop="197"/>
     </function>
 
     <function name="ClientActiveTexture"
@@ -4332,16 +4331,15 @@
     </function>
 
     <function name="MultiTexCoord1d"
-              deprecated="3.1" offset="376">
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="s" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord1dv"
-              deprecated="3.1" offset="377">
+    <function name="MultiTexCoord1dv" alias="MultiTexCoord1dvARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLdouble *" count="1"/>
-        <glx rop="198"/>
     </function>
 
     <function name="MultiTexCoord1f" alias="MultiTexCoord1fARB"
@@ -4362,11 +4360,10 @@
         <param name="s" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord1iv"
-              deprecated="3.1" offset="381">
+    <function name="MultiTexCoord1iv" alias="MultiTexCoord1ivARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLint *" count="1"/>
-        <glx rop="200"/>
     </function>
 
     <function name="MultiTexCoord1s"
@@ -4375,11 +4372,10 @@
         <param name="s" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord1sv"
-              deprecated="3.1" offset="383">
+    <function name="MultiTexCoord1sv" alias="MultiTexCoord1svARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLshort *" count="1"/>
-        <glx rop="201"/>
     </function>
 
     <function name="MultiTexCoord2d"
@@ -4389,11 +4385,10 @@
         <param name="t" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord2dv"
-              deprecated="3.1" offset="385">
+    <function name="MultiTexCoord2dv" alias="MultiTexCoord2dvARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLdouble *" count="2"/>
-        <glx rop="202"/>
     </function>
 
     <function name="MultiTexCoord2f" alias="MultiTexCoord2fARB"
@@ -4416,11 +4411,10 @@
         <param name="t" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord2iv"
-              deprecated="3.1" offset="389">
+    <function name="MultiTexCoord2iv" alias="MultiTexCoord2iv"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLint *" count="2"/>
-        <glx rop="204"/>
     </function>
 
     <function name="MultiTexCoord2s"
@@ -4430,11 +4424,10 @@
         <param name="t" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord2sv"
-              deprecated="3.1" offset="391">
+    <function name="MultiTexCoord2sv" alias="MultiTexCoord2svARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLshort *" count="2"/>
-        <glx rop="205"/>
     </function>
 
     <function name="MultiTexCoord3d"
@@ -4445,11 +4438,10 @@
         <param name="r" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord3dv"
-              deprecated="3.1" offset="393">
+    <function name="MultiTexCoord3dv" alias="MultiTexCoord3dvARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLdouble *" count="3"/>
-        <glx rop="206"/>
     </function>
 
     <function name="MultiTexCoord3f" alias="MultiTexCoord3fARB"
@@ -4474,11 +4466,10 @@
         <param name="r" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord3iv"
-              deprecated="3.1" offset="397">
+    <function name="MultiTexCoord3iv" alias="MultiTexCoord3ivARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLint *" count="3"/>
-        <glx rop="208"/>
     </function>
 
     <function name="MultiTexCoord3s"
@@ -4489,11 +4480,10 @@
         <param name="r" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord3sv"
-              deprecated="3.1" offset="399">
+    <function name="MultiTexCoord3sv" alias="MultiTexCoord3svARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLshort *" count="3"/>
-        <glx rop="209"/>
     </function>
 
     <function name="MultiTexCoord4d"
@@ -4505,11 +4495,10 @@
         <param name="q" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord4dv"
-              deprecated="3.1" offset="401">
+    <function name="MultiTexCoord4dv" alias="MultiTexCoord4dvARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLdouble *" count="4"/>
-        <glx rop="210"/>
     </function>
 
     <function name="MultiTexCoord4f" alias="MultiTexCoord4fARB" es1="1.0"
@@ -4536,11 +4525,10 @@
         <param name="q" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord4iv"
-              deprecated="3.1" offset="405">
+    <function name="MultiTexCoord4iv" alias="MultiTexCoord4ivARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLint *" count="4"/>
-        <glx rop="212"/>
     </function>
 
     <function name="MultiTexCoord4s"
@@ -4552,11 +4540,10 @@
         <param name="q" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord4sv"
-              deprecated="3.1" offset="407">
+    <function name="MultiTexCoord4sv" alias="MultiTexCoord4svARB"
+              deprecated="3.1">
         <param name="target" type="GLenum"/>
         <param name="v" type="const GLshort *" count="4"/>
-        <glx rop="213"/>
     </function>
 
     <function name="LoadTransposeMatrixf"
@@ -6069,8 +6056,9 @@
         <size name="Get" mode="get"/>
     </enum>
 
-    <function name="ActiveTextureARB" alias="ActiveTexture">
+    <function name="ActiveTextureARB" offset="374">
         <param name="texture" type="GLenum"/>
+        <glx rop="197"/>
     </function>
 
     <function name="ClientActiveTextureARB" alias="ClientActiveTexture">
@@ -6083,9 +6071,10 @@
         <param name="s" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord1dvARB" alias="MultiTexCoord1dv">
+    <function name="MultiTexCoord1dvARB" offset="377">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLdouble *"/>
+        <param name="v" type="const GLdouble *" count="1"/>
+        <glx rop="198"/>
     </function>
 
     <function name="MultiTexCoord1fARB" offset="378"
@@ -6106,9 +6095,10 @@
         <param name="s" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord1ivARB" alias="MultiTexCoord1iv">
+    <function name="MultiTexCoord1ivARB" offset="381">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLint *"/>
+        <param name="v" type="const GLint *" count="1"/>
+        <glx rop="200"/>
     </function>
 
     <function name="MultiTexCoord1sARB"
@@ -6117,9 +6107,10 @@
         <param name="s" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord1svARB" alias="MultiTexCoord1sv">
+    <function name="MultiTexCoord1svARB" offset="383">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLshort *"/>
+        <param name="v" type="const GLshort *" count="1"/>
+        <glx rop="201"/>
     </function>
 
     <function name="MultiTexCoord2dARB"
@@ -6129,9 +6120,10 @@
         <param name="t" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord2dvARB" alias="MultiTexCoord2dv">
+    <function name="MultiTexCoord2dvARB" offset="385">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLdouble *"/>
+        <param name="v" type="const GLdouble *" count="2"/>
+        <glx rop="202"/>
     </function>
 
     <function name="MultiTexCoord2fARB" offset="386"
@@ -6154,9 +6146,10 @@
         <param name="t" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord2ivARB" alias="MultiTexCoord2iv">
+    <function name="MultiTexCoord2ivARB" offset="389">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLint *"/>
+        <param name="v" type="const GLint *" count="2"/>
+        <glx rop="204"/>
     </function>
 
     <function name="MultiTexCoord2sARB"
@@ -6166,9 +6159,10 @@
         <param name="t" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord2svARB" alias="MultiTexCoord2sv">
+    <function name="MultiTexCoord2svARB" offset="391">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLshort *"/>
+        <param name="v" type="const GLshort *" count="2"/>
+        <glx rop="205"/>
     </function>
 
     <function name="MultiTexCoord3dARB"
@@ -6179,9 +6173,10 @@
         <param name="r" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord3dvARB" alias="MultiTexCoord3dv">
+    <function name="MultiTexCoord3dvARB" offset="393">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLdouble *"/>
+        <param name="v" type="const GLdouble *" count="3"/>
+        <glx rop="206"/>
     </function>
 
     <function name="MultiTexCoord3fARB" offset="394"
@@ -6206,9 +6201,10 @@
         <param name="r" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord3ivARB" alias="MultiTexCoord3iv">
+    <function name="MultiTexCoord3ivARB" offset="397">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLint *"/>
+        <param name="v" type="const GLint *" count="3"/>
+        <glx rop="208"/>
     </function>
 
     <function name="MultiTexCoord3sARB"
@@ -6219,9 +6215,10 @@
         <param name="r" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord3svARB" alias="MultiTexCoord3sv">
+    <function name="MultiTexCoord3svARB" offset="399">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLshort *"/>
+        <param name="v" type="const GLshort *" count="3"/>
+        <glx rop="209"/>
     </function>
 
     <function name="MultiTexCoord4dARB"
@@ -6233,9 +6230,10 @@
         <param name="q" type="GLdouble"/>
     </function>
 
-    <function name="MultiTexCoord4dvARB" alias="MultiTexCoord4dv">
+    <function name="MultiTexCoord4dvARB" offset="401">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLdouble *"/>
+        <param name="v" type="const GLdouble *" count="4"/>
+        <glx rop="210"/>
     </function>
 
     <function name="MultiTexCoord4fARB" offset="402"
@@ -6262,9 +6260,10 @@
         <param name="q" type="GLint"/>
     </function>
 
-    <function name="MultiTexCoord4ivARB" alias="MultiTexCoord4iv">
+    <function name="MultiTexCoord4ivARB" offset="405">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLint *"/>
+        <param name="v" type="const GLint *" count="4"/>
+        <glx rop="212"/>
     </function>
 
     <function name="MultiTexCoord4sARB"
@@ -6276,9 +6275,10 @@
         <param name="q" type="GLshort"/>
     </function>
 
-    <function name="MultiTexCoord4svARB" alias="MultiTexCoord4sv">
+    <function name="MultiTexCoord4svARB" offset="407">
         <param name="target" type="GLenum"/>
-        <param name="v" type="const GLshort *"/>
+        <param name="v" type="const GLshort *" count="4"/>
+        <glx rop="213"/>
     </function>
 </category>
 
