@@ -659,7 +659,6 @@ void __indirect_glVertexAttrib4sNV(void) { }
 void __indirect_glVertexAttrib4svNV(void) { }
 void __indirect_glVertexAttrib4ubNV(void) { }
 void __indirect_glVertexAttrib4ubvNV(void) { }
-void __indirect_glVertexAttribPointerNV(void) { }
 void __indirect_glVertexAttribs1dvNV(void) { }
 void __indirect_glVertexAttribs1fvNV(void) { }
 void __indirect_glVertexAttribs1svNV(void) { }
@@ -1446,7 +1445,6 @@ TEST_F(IndirectAPI, NV_vertex_program)
    EXPECT_EQ((_glapi_proc) __indirect_glVertexAttrib4svNV, table[_glapi_get_proc_offset("glVertexAttrib4svNV")]);
    EXPECT_EQ((_glapi_proc) __indirect_glVertexAttrib4ubNV, table[_glapi_get_proc_offset("glVertexAttrib4ubNV")]);
    EXPECT_EQ((_glapi_proc) __indirect_glVertexAttrib4ubvNV, table[_glapi_get_proc_offset("glVertexAttrib4ubvNV")]);
-   EXPECT_EQ((_glapi_proc) __indirect_glVertexAttribPointerNV, table[_glapi_get_proc_offset("glVertexAttribPointerNV")]);
    EXPECT_EQ((_glapi_proc) __indirect_glVertexAttribs1dvNV, table[_glapi_get_proc_offset("glVertexAttribs1dvNV")]);
    EXPECT_EQ((_glapi_proc) __indirect_glVertexAttribs1fvNV, table[_glapi_get_proc_offset("glVertexAttribs1fvNV")]);
    EXPECT_EQ((_glapi_proc) __indirect_glVertexAttribs1svNV, table[_glapi_get_proc_offset("glVertexAttribs1svNV")]);

@@ -78,21 +78,14 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 
 
     def printRealHeader(self):
-        print '#include <X11/Xmd.h>'
-        print '#include <GL/gl.h>'
-        print '#include <GL/glxproto.h>'
-
         print '#include <inttypes.h>'
+        print '#include "glxserver.h"'
         print '#include "indirect_size.h"'
         print '#include "indirect_size_get.h"'
         print '#include "indirect_dispatch.h"'
-        print '#include "glxserver.h"'
         print '#include "glxbyteorder.h"'
         print '#include "indirect_util.h"'
         print '#include "singlesize.h"'
-        print '#include "glapi.h"'
-        print '#include "glapitable.h"'
-        print '#include "dispatch.h"'
         print ''
         print '#define __GLX_PAD(x)  (((x) + 3) & ~3)'
         print ''
@@ -122,6 +115,9 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 
         return
 
+    def fptrType(self, name):
+	fptr = "pfngl" + name + "proc"
+	return fptr.upper()
 
     def printFunction(self, f, name):
         if (f.glx_sop or f.glx_vendorpriv) and (len(f.get_images()) != 0):
@@ -138,6 +134,9 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
             print 'int %s_%s(__GLXclientState *cl, GLbyte *pc)' % (base, name)
 
         print '{'
+
+        if not f.is_abi():
+            print '    %s %s = __glGetProcAddress("gl%s");' % (self.fptrType(name), name, name)
 
         if f.glx_rop or f.vectorequiv:
             self.printRenderFunction(f)
@@ -223,6 +222,7 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 
     def emit_function_call(self, f, retval_assign, indent):
         list = []
+        prefix = "gl" if f.is_abi() else ""
 
         for param in f.parameterIterator():
             if param.is_padding:
@@ -235,14 +235,7 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 
             list.append( '%s        %s' % (indent, location) )
 
-
-        if len( list ):
-            print '%s    %sCALL_%s( GET_DISPATCH(), (' % (indent, retval_assign, f.name)
-            print string.join( list, ",\n" )
-            print '%s    ) );' % (indent)
-        else:
-            print '%s    %sCALL_%s( GET_DISPATCH(), () );' % (indent, retval_assign, f.name)
-        return
+        print '%s    %s%s%s(%s);' % (indent, retval_assign, prefix, f.name, string.join(list, ',\n'))
 
 
     def common_func_print_just_start(self, f, indent):
@@ -505,18 +498,18 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
             # the must NEVER be byte-swapped.
 
             if not (img.img_type == "GL_BITMAP" and img.img_format == "GL_COLOR_INDEX"):
-                print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );'
+                print '    glPixelStorei(GL_UNPACK_SWAP_BYTES, hdr->swapBytes);'
 
-            print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_LSB_FIRST,    hdr->lsbFirst) );'
+            print '    glPixelStorei(GL_UNPACK_LSB_FIRST, hdr->lsbFirst);'
 
-            print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_ROW_LENGTH,   (GLint) %shdr->rowLength%s) );' % (pre, post)
+            print '    glPixelStorei(GL_UNPACK_ROW_LENGTH, (GLint) %shdr->rowLength%s);' % (pre, post)
             if img.depth:
-                print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_IMAGE_HEIGHT, (GLint) %shdr->imageHeight%s) );' % (pre, post)
-            print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SKIP_ROWS,    (GLint) %shdr->skipRows%s) );' % (pre, post)
+                print '    glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, (GLint) %shdr->imageHeight%s);' % (pre, post)
+            print '    glPixelStorei(GL_UNPACK_SKIP_ROWS, (GLint) %shdr->skipRows%s);' % (pre, post)
             if img.depth:
-                print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SKIP_IMAGES,  (GLint) %shdr->skipImages%s) );' % (pre, post)
-            print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SKIP_PIXELS,  (GLint) %shdr->skipPixels%s) );' % (pre, post)
-            print '    CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_ALIGNMENT,    (GLint) %shdr->alignment%s) );' % (pre, post)
+                print '    glPixelStorei(GL_UNPACK_SKIP_IMAGES, (GLint) %shdr->skipImages%s);' % (pre, post)
+            print '    glPixelStorei(GL_UNPACK_SKIP_PIXELS, (GLint) %shdr->skipPixels%s);' % (pre, post)
+            print '    glPixelStorei(GL_UNPACK_ALIGNMENT, (GLint) %shdr->alignment%s);' % (pre, post)
             print ''
 
 
