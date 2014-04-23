@@ -30,9 +30,6 @@
  *   Kristian Høgsberg (krh@redhat.com)
  */
 
-
-#ifdef GLX_DIRECT_RENDERING
-
 #include <stdio.h>
 #include <X11/Xlibint.h>
 #include <X11/extensions/Xext.h>
@@ -541,5 +538,3 @@ DRI2CopyRegion(Display * dpy, XID drawable, XserverRegion region,
    UnlockDisplay(dpy);
    SyncHandle();
 }
-
-#endif /* GLX_DIRECT_RENDERING */

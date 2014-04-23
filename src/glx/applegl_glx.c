@@ -31,8 +31,6 @@
  *   Kristian Høgsberg (krh@bitplanet.net)
  */
 
-#if defined(GLX_USE_APPLEGL)
-
 #include <stdbool.h>
 #include <dlfcn.h>
 
@@ -195,4 +193,3 @@ applegl_create_display(struct glx_display *glx_dpy)
    return GLXBadContext;
 }
 
-#endif

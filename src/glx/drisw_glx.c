@@ -21,8 +21,6 @@
  * SOFTWARE.
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include <X11/Xlib.h>
 #include "glxclient.h"
 #include <dlfcn.h>
@@ -813,5 +811,3 @@ driswCreateDisplay(Display * dpy)
 
    return &pdpyp->base;
 }
-
-#endif /* GLX_DIRECT_RENDERING */

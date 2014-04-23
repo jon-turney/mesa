@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include "glxclient.h"
 #include "glx_error.h"
 #include "dri2.h"
@@ -140,5 +138,3 @@ dri3_query_renderer_string(struct glx_screen *base, int attribute,
    return psc->rendererQuery->queryString(psc->driScreen, dri_attribute, value);
 }
 #endif /* HAVE_DRI3 */
-
-#endif /* GLX_DIRECT_RENDERING */
