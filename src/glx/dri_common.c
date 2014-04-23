@@ -33,8 +33,6 @@
  *   Kristian Høgsberg (krh@redhat.com)
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include <unistd.h>
 #include <dlfcn.h>
 #include <stdarg.h>
@@ -593,5 +591,3 @@ dri2_convert_glx_attribs(unsigned num_attribs, const uint32_t *attribs,
    *error = __DRI_CTX_ERROR_SUCCESS;
    return true;
 }
-
-#endif /* GLX_DIRECT_RENDERING */
