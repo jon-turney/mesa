@@ -107,19 +107,18 @@ pbuffer_destroy(Display * dpy, struct apple_glx_drawable *d)
    XFreePixmap(dpy, pbuf->xid);
 }
 
-/* Return true if an error occurred. */
-bool
+void
 apple_glx_pbuffer_destroy(Display * dpy, GLXPbuffer pbuf)
 {
-   return !apple_glx_drawable_destroy_by_type(dpy, pbuf,
-                                              APPLE_GLX_DRAWABLE_PBUFFER);
+   if (!apple_glx_drawable_destroy_by_type(dpy, pbuf,
+                                           APPLE_GLX_DRAWABLE_PBUFFER))
+      __glXSendError(dpy, GLXBadPbuffer, pbuf, X_GLXDestroyPbuffer, false);
 }
 
-/* Return true if an error occurred. */
-bool
-apple_glx_pbuffer_create(Display * dpy, GLXFBConfig config,
-                         int width, int height, int *errorcode,
-                         GLXPbuffer * result)
+GLXDrawable
+apple_glx_pbuffer_create(Display * dpy, struct glx_config *config,
+                         unsigned int width, unsigned int height,
+                         const int *attrib_list, GLboolean size_in_attribs)
 {
    struct apple_glx_drawable *d;
    struct apple_glx_pbuffer *pbuf = NULL;
@@ -172,11 +171,17 @@ apple_glx_pbuffer_create(Display * dpy, GLXFBConfig config,
 
    pbuf->event_mask = 0;
 
-   *result = pbuf->xid;
-
    d->unlock(d);
 
-   return false;
+   return pbuf->xid;
+
+ err:
+   /*
+    * apple_glx_pbuffer_create only sets the errorcode to core X11
+    * errors.
+    */
+   __glXSendError(dpy, errorcode, 0, X_GLXCreatePbuffer, true);
+   return NULL;
 }
 
 
@@ -303,12 +308,73 @@ apple_glx_pbuffer_query(GLXPbuffer p, int attr, unsigned int *value)
          *value = pbuf->fbconfigID;
          result = true;
          break;
+
+      case GLX_EVENT_MASK_SGIX:
+         result = apple_glx_pbuffer_get_event_mask(drawable, value);
+         break;
       }
 
       d->unlock(d);
    }
 
    return result;
+}
+
+int
+apple_get_drawable_attribute(Display * dpy, GLXDrawable drawable,
+                             int attribute, unsigned int *value)
+{
+   Window root;
+   int x, y;
+   unsigned int width, height, bd, depth;
+
+   if (apple_glx_pixmap_query(drawable, attribute, value))
+      return 0;                   /*done */
+
+   if (apple_glx_pbuffer_query(drawable, attribute, value))
+      return 0;                   /*done */
+
+   /*
+    * The OpenGL spec states that we should report GLXBadDrawable if
+    * the drawable is invalid, however doing so would require that we
+    * use XSetErrorHandler(), which is known to not be thread safe.
+    * If we use a round-trip call to validate the drawable, there could
+    * be a race, so instead we just opt in favor of letting the
+    * XGetGeometry request fail with a GetGeometry request X error
+    * rather than GLXBadDrawable, in what is hoped to be a rare
+    * case of an invalid drawable.  In practice most and possibly all
+    * X11 apps using GLX shouldn't notice a difference.
+    */
+   if (XGetGeometry
+       (dpy, drawable, &root, &x, &y, &width, &height, &bd, &depth)) {
+      switch (attribute) {
+      case GLX_WIDTH:
+         *value = width;
+         break;
+
+      case GLX_HEIGHT:
+         *value = height;
+         break;
+
+      case GLX_EVENT_MASK_SGIX:
+         *value = 0;
+      }
+   }
+
+   return 0;
+}
+
+void
+apple_change_drawable_attribute(Display * dpy, GLXDrawable drawable,
+                                const CARD32 * attribs, size_t num_attribs)
+{
+   for (i = 0; i < num_attribs; i++) {
+      switch(attribs[i * 2]) {
+      case GLX_EVENT_MASK:
+         apple_glx_pbuffer_set_event_mask(drawable, value);
+         break;
+      }
+   }
 }
 
 bool

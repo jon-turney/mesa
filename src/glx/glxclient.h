@@ -76,10 +76,6 @@ struct glx_context;
 extern void DRI_glXUseXFont(struct glx_context *ctx,
 			    Font font, int first, int count, int listbase);
 
-#endif
-
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 /**
  * Display dependent methods.  This structure is initialized during the
  * \c driCreateDisplay call.
@@ -88,6 +84,19 @@ typedef struct __GLXDRIdisplayRec __GLXDRIdisplay;
 typedef struct __GLXDRIscreenRec __GLXDRIscreen;
 typedef struct __GLXDRIdrawableRec __GLXDRIdrawable;
 
+/*
+  platform vtable
+ */
+struct glx_platform_vtable {
+   void (*platformInit) (void);
+   GLXDrawable (*createPBuffer) (Display * dpy, struct glx_config * config,
+                                 unsigned int width, unsigned int height,
+                                 const int *attrib_list, GLboolean size_in_attribs);
+};
+
+/*
+  display vtable
+ */
 struct __GLXDRIdisplayRec
 {
     /**

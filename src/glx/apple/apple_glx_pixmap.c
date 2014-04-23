@@ -114,20 +114,21 @@ pixmap_destroy(Display * dpy, struct apple_glx_drawable *d)
    apple_glx_diagnostic("destroyed pixmap buffer for: 0x%lx\n", d->drawable);
 }
 
-/* Return true if an error occurred. */
-bool
-apple_glx_pixmap_create(Display * dpy, int screen, Pixmap pixmap,
-                        const void *mode)
+GLXDrawable
+apple_glx_pixmap_create(Display *dpy, struct glx_config *config,
+                        Drawable drawable, const int *attrib_list, CARD8 glxCode)
 {
    struct apple_glx_drawable *d;
    struct apple_glx_pixmap *p;
    bool double_buffered;
    bool uses_stereo;
    CGLError error;
-   const struct glx_config *cmodes = mode;
+
+   const struct glx_config *cmodes = config;
+   int screen = config->screen;
 
    if (apple_glx_drawable_create(dpy, screen, pixmap, &d, &callbacks))
-      return true;
+      return None;
 
    /* d is locked and referenced at this point. */
 
@@ -141,7 +142,7 @@ apple_glx_pixmap_create(Display * dpy, int screen, Pixmap pixmap,
                               &p->size, p->path, PATH_MAX)) {
       d->unlock(d);
       d->destroy(d);
-      return true;
+      return None;
    }
 
    p->fd = shm_open(p->path, O_RDWR, 0);
@@ -150,7 +151,7 @@ apple_glx_pixmap_create(Display * dpy, int screen, Pixmap pixmap,
       perror("shm_open");
       d->unlock(d);
       d->destroy(d);
-      return true;
+      return None;
    }
 
    p->buffer = mmap(NULL, p->size, PROT_READ | PROT_WRITE,
@@ -160,7 +161,7 @@ apple_glx_pixmap_create(Display * dpy, int screen, Pixmap pixmap,
       perror("mmap");
       d->unlock(d);
       d->destroy(d);
-      return true;
+      return None;
    }
 
    apple_visual_create_pfobj(&p->pixel_format_obj, mode, &double_buffered,
@@ -172,7 +173,7 @@ apple_glx_pixmap_create(Display * dpy, int screen, Pixmap pixmap,
    if (kCGLNoError != error) {
       d->unlock(d);
       d->destroy(d);
-      return true;
+      return None;
    }
 
    p->fbconfigID = cmodes->fbconfigID;
@@ -181,7 +182,7 @@ apple_glx_pixmap_create(Display * dpy, int screen, Pixmap pixmap,
 
    apple_glx_diagnostic("created: pixmap buffer for 0x%lx\n", d->drawable);
 
-   return false;
+   return drawable;
 }
 
 bool
@@ -220,10 +221,10 @@ apple_glx_pixmap_query(GLXPixmap pixmap, int attr, unsigned int *value)
    return result;
 }
 
-/* Return true if the type is valid for pixmap. */
-bool
-apple_glx_pixmap_destroy(Display * dpy, GLXPixmap pixmap)
+void
+apple_glx_pixmap_destroy(Display * dpy, GLXDrawable drawable, CARD32 glxCode)
 {
-   return !apple_glx_drawable_destroy_by_type(dpy, pixmap,
-                                              APPLE_GLX_DRAWABLE_PIXMAP);
+   if (!apple_glx_drawable_destroy_by_type(dpy, pixmap,
+                                           APPLE_GLX_DRAWABLE_PIXMAP))
+      __glXSendError(dpy, GLXBadPixmap, pixmap, glxCode, false);
 }

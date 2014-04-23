@@ -43,7 +43,7 @@
 #include <X11/extensions/extutil.h>
 #ifdef GLX_USE_APPLEGL
 #include "apple_glx.h"
-#include "apple_visual.h"
+//#include "apple_visual.h"
 #endif
 #include "glxextensions.h"
 
@@ -84,10 +84,8 @@ static /* const */ char *error_list[] = {
    "GLXBadProfileARB",
 };
 
-#ifdef GLX_USE_APPLEGL
 static char *__glXErrorString(Display *dpy, int code, XExtCodes *codes, 
                               char *buf, int n);
-#endif
 
 static
 XEXT_GENERATE_ERROR_STRING(__glXErrorString, __glXExtensionName,
@@ -203,15 +201,11 @@ FreeScreenConfigs(struct glx_display * priv)
       psc = priv->screens[i];
       glx_screen_cleanup(psc);
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
       if (psc->driScreen) {
          psc->driScreen->destroyScreen(psc);
       } else {
 	 free(psc);
       }
-#else
-      free(psc);
-#endif
    }
    free((char *) priv->screens);
    priv->screens = NULL;
@@ -234,7 +228,8 @@ glx_display_free(struct glx_display *priv)
 
    __glxHashDestroy(priv->glXDrawHash);
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
+#if !defined(GLX_USE_APPLEGL)
    __glxHashDestroy(priv->drawHash);
 
    /* Free the direct rendering per display data */
@@ -249,6 +244,12 @@ glx_display_free(struct glx_display *priv)
    if (priv->dri2Display)
       (*priv->dri2Display->destroyDisplay) (priv->dri2Display);
    priv->dri2Display = NULL;
+
+   /* No DRI3 ??? */
+#else
+   if (priv->appledriDisplay)
+      (*priv->appledriDisplay->destroyDisplay) (priv->appledriDisplay);
+   priv->appledriDisplay = NULL;
 #endif
 
    free((char *) priv);
@@ -774,7 +775,9 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 
    for (i = 0; i < screens; i++, psc++) {
       psc = NULL;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
+      /* This expresses a platform-specific preference order of direct renderers */
+#if !defined(__APPLE__)
 #if defined(HAVE_DRI3)
       if (priv->dri3Display)
          psc = (*priv->dri3Display->createScreen) (i, priv);
@@ -783,12 +786,13 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 	 psc = (*priv->dri2Display->createScreen) (i, priv);
       if (psc == NULL && priv->driDisplay)
 	 psc = (*priv->driDisplay->createScreen) (i, priv);
+#endif
+#else
+      if (psc == NULL)
+         psc = (*priv->appledriDisplay->createScreen)(i, priv);
+#endif
       if (psc == NULL && priv->driswDisplay)
 	 psc = (*priv->driswDisplay->createScreen) (i, priv);
-#endif
-#if defined(GLX_USE_APPLEGL)
-      if (psc == NULL)
-         psc = applegl_create_screen(i, priv);
 #else
       if (psc == NULL)
 	 psc = indirect_create_screen(i, priv);
@@ -806,7 +810,7 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 __glXInitialize(Display * dpy)
 {
    struct glx_display *dpyPriv, *d;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
    Bool glx_direct, glx_accel;
 #endif
    int i;
@@ -858,10 +862,38 @@ __glXInitialize(Display * dpy)
 
    dpyPriv->glXDrawHash = __glxHashCreate();
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#ifdef __linux__
+   glx_platform_vtable driPlatform = {
+      .createPBuffer =  CreatePBuffer;
+      .destroyPBuffer = DestroyPbuffer;
+      .getDrawableAttribute = GetDrawableAttribute;
+      .changeDrawableAttribute = ChangeDrawableAttribute;
+      .createDrawable = CreateDrawable;
+      .destroyDrawable = DestroyDrawable;
+   };
+   dpyPriv->platform = driPlatform;
+#endif
+#ifdef __APPLE__
+   glx_platform_vtable applePlatform = {
+      .createPBuffer =  apple_glx_pbuffer_create;
+      .destroyPBuffer = apple_glx_pbuffer_destroy;
+      .getDrawableAttribute = apple_get_drawable_attribute;
+      .changeDrawableAttribute = apple_change_drawable_attribute;
+      .createDrawable = apple_glx_pixmap_create;
+      .destroyDrawable = apple_glx_pixmap_destroy;
+#else
+   };
+   dpyPriv->platform = applePlatform;
+#endif
+#if defined(_WIN32) || defined(__CYGWIN__)
+   dpyPriv->platform = windowsPlatform;
+#endif
+
+#if defined(GLX_DIRECT_RENDERING)
    glx_direct = (getenv("LIBGL_ALWAYS_INDIRECT") == NULL);
    glx_accel = (getenv("LIBGL_ALWAYS_SOFTWARE") == NULL);
 
+#if !defined(GLX_USE_APPLEGL)
    dpyPriv->drawHash = __glxHashCreate();
 
    /*
@@ -877,16 +909,14 @@ __glXInitialize(Display * dpy)
       dpyPriv->dri2Display = dri2CreateDisplay(dpy);
       dpyPriv->driDisplay = driCreateDisplay(dpy);
    }
+#else
+   if (glx_direct && glx_accel) {
+      dpyPriv->appledriDisplay = applegl_create_display(dpyPriv);
+#endif
    if (glx_direct)
       dpyPriv->driswDisplay = driswCreateDisplay(dpy);
 #endif
 
-#ifdef GLX_USE_APPLEGL
-   if (!applegl_create_display(dpyPriv)) {
-      free(dpyPriv);
-      return NULL;
-   }
-#endif
    if (!AllocAndFetchScreenConfigs(dpy, dpyPriv)) {
       free(dpyPriv);
       return NULL;
