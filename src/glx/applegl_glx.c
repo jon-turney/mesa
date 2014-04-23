@@ -184,12 +184,20 @@ applegl_create_screen(int screen, struct glx_display * priv)
    return psc;
 }
 
-_X_HIDDEN int
+_X_HIDDEN __GLXDRIdisplay *
 applegl_create_display(struct glx_display *glx_dpy)
 {
-   if(!apple_init_glx(glx_dpy->dpy))
-      return 1;
+   struct __GLXDRIdisplay *pdpyp;
 
-   return GLXBadContext;
+   if (!apple_init_glx(glx_dpy->dpy))
+      return NULL;
+
+   pdpyp = malloc(sizeof *pdpyp);
+   if (pdpyp == NULL)
+      return NULL;
+
+   pdpyp->destroyDisplay = apple_destroy_display;
+   pdpyp->createScreen = applegl_create_screen;
+
+   return &pdpyp->base;
 }
-

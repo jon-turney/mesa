@@ -78,16 +78,20 @@ glXCreateContextAttribsARB(Display *dpy, GLXFBConfig config,
       gc = psc->vtable->create_context_attribs(psc, cfg, share, num_attribs,
 					       (const uint32_t *) attrib_list,
 					       &dummy_err);
+
+   }
+
+   /* ??? fallback if create_context_attribs not supported ??? or just fail ??? */
+   if (gc == NULL) {
+      if (direct && psc->vtable->create_context) {
+         gc = psc->vtable->create_context(psc, cfg, share, 0);
+      }
    }
 
    if (gc == NULL) {
-#ifdef GLX_USE_APPLEGL
-      gc = applegl_create_context(psc, cfg, share, 0);
-#else
       gc = indirect_create_context_attribs(psc, cfg, share, num_attribs,
               (const uint32_t *) attrib_list,
               &dummy_err);
-#endif
    }
 
    gc->xid = xcb_generate_id(c);

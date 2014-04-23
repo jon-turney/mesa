@@ -71,15 +71,6 @@ struct glx_context;
 
 /************************************************************************/
 
-#ifdef GLX_DIRECT_RENDERING
-
-extern void DRI_glXUseXFont(struct glx_context *ctx,
-			    Font font, int first, int count, int listbase);
-
-#endif
-
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 /**
  * Display dependent methods.  This structure is initialized during the
  * \c driCreateDisplay call.
@@ -88,6 +79,29 @@ typedef struct __GLXDRIdisplayRec __GLXDRIdisplay;
 typedef struct __GLXDRIscreenRec __GLXDRIscreen;
 typedef struct __GLXDRIdrawableRec __GLXDRIdrawable;
 
+/*
+  platform vtable
+ */
+struct glx_platform_vtable {
+   void (*platformInit) (void);
+   GLXDrawable (*createPbuffer) (Display * dpy, struct glx_config * config,
+                                 unsigned int width, unsigned int height,
+                                 const int *attrib_list, GLboolean size_in_attribs);
+   void (*destroyPbuffer) (Display * dpy, GLXPbuffer pbuf);
+   int (*getDrawableAttribute) (Display * dpy, GLXDrawable drawable,
+                                int attribute, unsigned int *value);
+   void (*changeDrawableAttribute) (Display * dpy, GLXDrawable drawable,
+                                    const CARD32 * attribs, size_t num_attribs);
+   GLXDrawable (*createDrawable) (Display *dpy, struct glx_config *config,
+                                  Drawable drawable, const int *attrib_list, CARD8 glxCode);
+   void (*destroyDrawable) (Display * dpy, GLXDrawable drawable, CARD32 glxCode);
+};
+
+struct glx_platform_vtable *platform;
+
+/*
+  display vtable
+ */
 struct __GLXDRIdisplayRec
 {
     /**
@@ -141,6 +155,11 @@ struct __GLXDRIdrawableRec
    int refcount;
 };
 
+//#ifdef GLX_DIRECT_RENDERING
+
+extern void DRI_glXUseXFont(struct glx_context *ctx,
+			    Font font, int first, int count, int listbase);
+
 /*
 ** Function to create and DRI display data and initialize the display
 ** dependent methods.
@@ -161,7 +180,7 @@ extern const char *glXGetScreenDriver(Display * dpy, int scrNum);
 
 extern const char *glXGetDriverConfig(const char *driverName);
 
-#endif
+//#endif
 
 /************************************************************************/
 
@@ -504,12 +523,12 @@ struct glx_screen
    Display *dpy;
    int scr;
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+//#if defined(GLX_DIRECT_RENDERING)
     /**
      * Per screen direct rendering interface functions and data.
      */
    __GLXDRIscreen *driScreen;
-#endif
+//#endif
 
     /**
      * Linked list of glx visuals and  fbconfigs for this screen.
@@ -791,10 +810,10 @@ XExtDisplayInfo *__glXFindDisplay (Display *dpy);
 
 extern void
 GarbageCollectDRIDrawables(struct glx_screen *psc);
+#endif
 
 extern __GLXDRIdrawable *
 GetGLXDRIDrawable(Display *dpy, GLXDrawable drawable);
-#endif
 
 extern struct glx_screen *GetGLXScreenConfigs(Display * dpy, int scrn);
 
