@@ -24,8 +24,6 @@
 #include <signal.h>
 #include <setjmp.h>
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 extern "C" {
 #include "glxclient.h"
 #include "glx_error.h"
@@ -309,5 +307,3 @@ TEST_F(dri2_query_renderer_integer_test, valid_attribute_mapping)
       EXPECT_FALSE(got_sigsegv);
    }
 }
-
-#endif /* GLX_DIRECT_RENDERING */

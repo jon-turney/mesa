@@ -36,8 +36,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* THIS IS NOT AN X CONSORTIUM STANDARD */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include <X11/Xlibint.h>
 #include <X11/Xfuncproto.h>
 #include <X11/extensions/Xext.h>
@@ -629,5 +627,3 @@ XF86DRICloseFullScreen(Display * dpy, int screen, Drawable drawable)
    (void) drawable;
    return True;
 }
-
-#endif /* GLX_DIRECT_RENDERING */

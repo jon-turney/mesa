@@ -30,8 +30,6 @@
  *   Kristian Høgsberg (krh@redhat.com)
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include <X11/Xlib.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/Xlib-xcb.h>
@@ -1409,5 +1407,3 @@ dri2CreateDisplay(Display * dpy)
 
    return &pdp->base;
 }
-
-#endif /* GLX_DIRECT_RENDERING */
