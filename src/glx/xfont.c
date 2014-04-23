@@ -33,8 +33,6 @@
   called by that routine when direct rendering is enabled.
 */
 
-#ifdef GLX_DIRECT_RENDERING
-
 #include "glxclient.h"
 
 /* Some debugging info.  */
@@ -371,5 +369,3 @@ DRI_glXUseXFont(struct glx_context *CC, Font font, int first, int count, int lis
    glPixelStorei(GL_UNPACK_SKIP_PIXELS, skippixels);
    glPixelStorei(GL_UNPACK_ALIGNMENT, alignment);
 }
-
-#endif

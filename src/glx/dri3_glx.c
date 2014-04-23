@@ -55,8 +55,6 @@
  *   Kristian Høgsberg (krh@redhat.com)
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include <X11/Xlib.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/Xlib-xcb.h>
@@ -1885,5 +1883,3 @@ no_extension:
    free(pdp);
    return NULL;
 }
-
-#endif /* GLX_DIRECT_RENDERING */

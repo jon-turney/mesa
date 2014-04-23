@@ -32,8 +32,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
-
 #include <X11/Xlib.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/Xdamage.h>
@@ -938,5 +936,3 @@ driCreateDisplay(Display * dpy)
 
    return &pdpyp->base;
 }
-
-#endif /* GLX_DIRECT_RENDERING */
