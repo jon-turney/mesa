@@ -234,7 +234,7 @@ glx_display_free(struct glx_display *priv)
 
    __glxHashDestroy(priv->glXDrawHash);
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#ifdef GLX_DIRECT_RENDERING
    __glxHashDestroy(priv->drawHash);
 
    /* Free the direct rendering per display data */
@@ -242,6 +242,7 @@ glx_display_free(struct glx_display *priv)
       (*priv->driswDisplay->destroyDisplay) (priv->driswDisplay);
    priv->driswDisplay = NULL;
 
+#ifdef GLX_USE_DRM
    if (priv->driDisplay)
       (*priv->driDisplay->destroyDisplay) (priv->driDisplay);
    priv->driDisplay = NULL;
@@ -256,7 +257,8 @@ glx_display_free(struct glx_display *priv)
    dpyPriv->dri3Display = NULL;
 #endif /* HAVE_DRI3 */
 
-#endif
+#endif /* GLX_USE_DRM */
+#endif /* GLX_DIRECT_RENDERING */
 
    free((char *) priv);
 }
@@ -781,18 +783,21 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 
    for (i = 0; i < screens; i++, psc++) {
       psc = NULL;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
+#if defined(GLX_USE_DRM)
 #if defined(HAVE_DRI3)
       if (priv->dri3Display)
          psc = (*priv->dri3Display->createScreen) (i, priv);
-#endif
+#endif /* HAVE_DRI3 */
       if (psc == NULL && priv->dri2Display)
 	 psc = (*priv->dri2Display->createScreen) (i, priv);
       if (psc == NULL && priv->driDisplay)
 	 psc = (*priv->driDisplay->createScreen) (i, priv);
+#endif /* GLX_USE_DRM */
       if (psc == NULL && priv->driswDisplay)
 	 psc = (*priv->driswDisplay->createScreen) (i, priv);
-#endif
+#endif /* GLX_DIRECT_RENDERING */
+
 #if defined(GLX_USE_APPLEGL)
       if (psc == NULL)
          psc = applegl_create_screen(i, priv);
@@ -813,7 +818,7 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 __glXInitialize(Display * dpy)
 {
    struct glx_display *dpyPriv, *d;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
    Bool glx_direct, glx_accel;
 #endif
    int i;
@@ -865,12 +870,13 @@ __glXInitialize(Display * dpy)
 
    dpyPriv->glXDrawHash = __glxHashCreate();
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#ifdef GLX_DIRECT_RENDERING
    glx_direct = (getenv("LIBGL_ALWAYS_INDIRECT") == NULL);
    glx_accel = (getenv("LIBGL_ALWAYS_SOFTWARE") == NULL);
 
    dpyPriv->drawHash = __glxHashCreate();
 
+#ifdef GLX_USE_DRM
    /*
     ** Initialize the direct rendering per display data and functions.
     ** Note: This _must_ be done before calling any other DRI routines
@@ -884,16 +890,19 @@ __glXInitialize(Display * dpy)
       dpyPriv->dri2Display = dri2CreateDisplay(dpy);
       dpyPriv->driDisplay = driCreateDisplay(dpy);
    }
+#endif /* GLX_USE_DRM */
+
    if (glx_direct)
       dpyPriv->driswDisplay = driswCreateDisplay(dpy);
-#endif
 
 #ifdef GLX_USE_APPLEGL
    if (!applegl_create_display(dpyPriv)) {
       free(dpyPriv);
       return NULL;
    }
-#endif
+#endif /* GLX_USE_APPLEGL */
+#endif /* GLX_DIRECT_RENDERING */
+
    if (!AllocAndFetchScreenConfigs(dpy, dpyPriv)) {
       free(dpyPriv);
       return NULL;
