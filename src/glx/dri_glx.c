@@ -460,8 +460,10 @@ CallCreateNewScreen(Display *dpy, int scrn, struct dri_screen *psc,
    configs = driConvertConfigs(psc->core, psc->base.configs, driver_configs);
    visuals = driConvertConfigs(psc->core, psc->base.visuals, driver_configs);
 
-   if (!configs || !visuals)
+   if (!configs || !visuals) {
+       ErrorMessageF("Failed to find matching fbConfigs or visuals\n");
        goto handle_error;
+   }
 
    glx_config_destroy_list(psc->base.configs);
    psc->base.configs = configs;
