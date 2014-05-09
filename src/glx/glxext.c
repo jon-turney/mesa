@@ -774,7 +774,7 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 
    for (i = 0; i < screens; i++, psc++) {
       psc = NULL;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING) && defined(GLX_USE_DRM)
 #if defined(HAVE_DRI3)
       if (priv->dri3Display)
          psc = (*priv->dri3Display->createScreen) (i, priv);
@@ -858,7 +858,7 @@ __glXInitialize(Display * dpy)
 
    dpyPriv->glXDrawHash = __glxHashCreate();
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING) && defined(GLX_USE_DRM)
    glx_direct = (getenv("LIBGL_ALWAYS_INDIRECT") == NULL);
    glx_accel = (getenv("LIBGL_ALWAYS_SOFTWARE") == NULL);
 

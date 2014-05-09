@@ -915,6 +915,7 @@ xyesno)
 
     if test x"$driglx_direct" = xyes; then
         if test x"$dri_platform" = xdrm ; then
+            DEFINES="$DEFINES -DGLX_USE_DRM"
             if test "x$have_libdrm" != xyes; then
                AC_MSG_ERROR([Direct rendering requires libdrm >= $LIBDRM_REQUIRED])
             fi
@@ -933,6 +934,13 @@ xyesno)
             if test x"$enable_dri3" = xyes; then
                dri_modules="$dri_modules xcb-dri3 xcb-present xcb-sync xshmfence >= $XSHMFENCE_REQUIRED"
             fi
+        fi
+        if test x"$dri_platform" = xapple ; then
+            DEFINES="$DEFINES -DGLX_USE_APPLEGL"
+        fi
+        if test x"$dri_platform" = xwindows ; then
+            DEFINES="$DEFINES -DGLX_USE_WINDOWSGL"
+        fi
     fi
 
     # add xf86vidmode if available

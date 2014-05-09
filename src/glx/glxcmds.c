@@ -2581,8 +2581,10 @@ static const struct name_address_pair GLX_functions[] = {
    GLX_FUNCTION2(glXReleaseTexImageEXT, __glXReleaseTexImageEXT),
 #endif
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING) && defined(GLX_USE_DRM)
    /*** DRI configuration ***/
+   /* I don't think there is any GLX extension which defines these , but they
+    * are used by xdriinfo */
    GLX_FUNCTION(glXGetScreenDriver),
    GLX_FUNCTION(glXGetDriverConfig),
 #endif
