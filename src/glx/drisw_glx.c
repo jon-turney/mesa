@@ -730,6 +730,16 @@ driswCreateScreen(int screen, struct glx_display *priv)
    extensions = psc->core->getExtensions(psc->driScreen);
    driswBindExtensions(psc, extensions);
 
+   /* We will ignore any server performance caveats in visuals and fbConfigs
+      since they don't affect swrast performance */
+   /* XXX: is this wrong as it changes configs seen by DRI2/3 ??? */
+   for (struct glx_config *m = psc->base.configs; m; m = m->next) {
+      m->visualRating = GLX_DONT_CARE;
+   }
+   for (struct glx_config *m = psc->base.visuals; m; m = m->next) {
+      m->visualRating = GLX_DONT_CARE;
+   }
+
    configs = driConvertConfigs(psc->core, psc->base.configs, driver_configs);
    visuals = driConvertConfigs(psc->core, psc->base.visuals, driver_configs);
 
