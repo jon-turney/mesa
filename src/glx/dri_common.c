@@ -294,6 +294,9 @@ driConfigEqual(const __DRIcoreExtension *core,
          break;
 
       case __DRI_ATTRIB_CONFIG_CAVEAT:
+         if (config->visualRating == GLX_DONT_CARE)
+            break;
+
          if (value & __DRI_ATTRIB_NON_CONFORMANT_CONFIG)
             glxValue = GLX_NON_CONFORMANT_CONFIG;
          else if (value & __DRI_ATTRIB_SLOW_BIT)
