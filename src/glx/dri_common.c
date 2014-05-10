@@ -234,9 +234,11 @@ static const struct
       __ATTRIB(__DRI_ATTRIB_BLUE_MASK, blueMask),
       __ATTRIB(__DRI_ATTRIB_ALPHA_MASK, alphaMask),
 #endif
+#if 0
       __ATTRIB(__DRI_ATTRIB_MAX_PBUFFER_WIDTH, maxPbufferWidth),
       __ATTRIB(__DRI_ATTRIB_MAX_PBUFFER_HEIGHT, maxPbufferHeight),
       __ATTRIB(__DRI_ATTRIB_MAX_PBUFFER_PIXELS, maxPbufferPixels),
+#endif
       __ATTRIB(__DRI_ATTRIB_OPTIMAL_PBUFFER_WIDTH, optimalPbufferWidth),
       __ATTRIB(__DRI_ATTRIB_OPTIMAL_PBUFFER_HEIGHT, optimalPbufferHeight),
 #if 0
