@@ -24,7 +24,7 @@ SHARED_GLAPI_CFLAGS = -DGLX_SHARED_GLAPI
 SHARED_GLAPI_LIB = $(top_builddir)/src/mapi/shared-glapi/libglapi.la
 endif
 
-SUBDIRS=. tests
+SUBDIRS=
 
 if HAVE_XF86VIDMODE
 EXTRA_DEFINES_XF86VIDMODE = -DXF86VIDMODE
@@ -110,6 +110,9 @@ endif
 if HAVE_APPLEDRI
 libglx_la_SOURCES += \
 	  applegl_glx.c
+
+SUBDIRS += apple
+libglx_la_LIBADD += $(builddir)/apple/libappleglx.la
 endif
 
 libglx_la_LIBADD = $(top_builddir)/src/loader/libloader.la
@@ -130,5 +133,7 @@ GL_LDFLAGS = \
 lib@GL_LIB@_la_SOURCES =
 lib@GL_LIB@_la_LIBADD = $(GL_LIBS)
 lib@GL_LIB@_la_LDFLAGS = $(GL_LDFLAGS)
+
+SUBDIRS+=. tests
 
 include $(top_srcdir)/install-lib-links.mk
