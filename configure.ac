@@ -2209,6 +2209,7 @@ AC_CONFIG_FILES([Makefile
 		src/gbm/main/gbm.pc
 		src/glsl/Makefile
 		src/glx/Makefile
+		src/glx/apple/Makefile
 		src/glx/tests/Makefile
 		src/gtest/Makefile
 		src/loader/Makefile

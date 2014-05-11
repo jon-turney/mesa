@@ -27,6 +27,7 @@
 #include <GL/gl.h>
 #include "glxclient.h"
 #include <GL/glxproto.h>
+#include "indirect.h"
 
 CARD32
 __glXReadReply(Display * dpy, size_t size, void *dest,
