@@ -316,6 +316,22 @@ if test "x$enable_debug" = xyes; then
 fi
 
 dnl
+dnl Check if linker supports -Bsymbolic
+dnl
+save_LDFLAGS=$LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,-Bsymbolic"
+AC_MSG_CHECKING([if ld supports -Bsymbolic])
+AC_LINK_IFELSE(
+    [AC_LANG_SOURCE([int main() { return 0;}])],
+    [AC_MSG_RESULT([yes])
+        BSYMBOLIC="-Wl,-Bsymbolic";],
+    [AC_MSG_RESULT([no])
+        BSYMBOLIC="";])
+LDFLAGS=$save_LDFLAGS
+
+AC_SUBST([BSYMBOLIC])
+
+dnl
 dnl Check if linker supports garbage collection
 dnl
 save_LDFLAGS=$LDFLAGS
@@ -336,13 +352,35 @@ dnl OpenBSD does not have DT_NEEDED entries for libc by design
 dnl so when these flags are passed to ld via libtool the checks will fail
 dnl
 case "$host_os" in
-openbsd*)
+openbsd*|darwin*)
     LD_NO_UNDEFINED="" ;;
 *)
     LD_NO_UNDEFINED="-Wl,--no-undefined" ;;
 esac
 
 AC_SUBST([LD_NO_UNDEFINED])
+
+dnl
+dnl Check if linker supports version scripts
+dnl
+AC_MSG_CHECKING([if libraries can be versioned])
+save_LDFLAGS=$LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--version-script=conftest.map"
+cat > conftest.map <<EOF
+VERSION_1 {
+     global:
+         main;
+
+     local:
+         *;
+};
+EOF
+AC_LINK_IFELSE(
+    [AC_LANG_SOURCE([int main() { return 0;}])],
+    [have_ld_version_script=yes;AC_MSG_RESULT(yes)],
+    [have_ld_version_script=no; AC_MSG_RESULT(no)])
+LDFLAGS=$save_LDFLAGS
+AM_CONDITIONAL(HAVE_LD_VERSION_SCRIPT, test "$have_ld_version_script" = "yes")
 
 dnl
 dnl compatibility symlinks
@@ -1039,6 +1077,12 @@ if test "x$enable_dri" = xyes; then
         ;;
     cygwin*)
         DEFINES="$DEFINES -DUSE_EXTERNAL_DXTN_LIB=1"
+        if test "x$with_dri_drivers" = "xyes"; then
+            with_dri_drivers="swrast"
+        fi
+        ;;
+    darwin*)
+        DEFINES="$DEFINES -DUSE_EXTERNAL_DXTN_LIB=1 -DGLX_ALIAS_UNSUPPORTED"
         if test "x$with_dri_drivers" = "xyes"; then
             with_dri_drivers="swrast"
         fi
