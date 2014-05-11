@@ -26,7 +26,6 @@ libappleglx_la_SOURCES = \
 	apple_xgl_api_stereo.c \
 	apple_xgl_api_viewport.c \
 	appledri.c \
-	glx_empty.c \
-	glxreply.c
+	glx_empty.c
 
 libappleglx_la_LDFLAGS = -lXplugin -framework ApplicationServices -framework CoreFoundation
