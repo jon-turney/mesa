@@ -46,7 +46,7 @@ _mesa_BindAttribLocation(GLhandleARB program, GLuint index,
    GET_CURRENT_CONTEXT(ctx);
 
    struct gl_shader_program *const shProg =
-      _mesa_lookup_shader_program_err(ctx, program, "glBindAttribLocation");
+      _mesa_lookup_shader_program_err(ctx, (uintptr_t)program, "glBindAttribLocation");
    if (!shProg)
       return;
 
@@ -108,7 +108,7 @@ _mesa_GetActiveAttrib(GLhandleARB program, GLuint desired_index,
    GET_CURRENT_CONTEXT(ctx);
    struct gl_shader_program *shProg;
 
-   shProg = _mesa_lookup_shader_program_err(ctx, program, "glGetActiveAttrib");
+   shProg = _mesa_lookup_shader_program_err(ctx, (uintptr_t)program, "glGetActiveAttrib");
    if (!shProg)
       return;
 
@@ -215,7 +215,7 @@ _mesa_GetAttribLocation(GLhandleARB program, const GLcharARB * name)
 {
    GET_CURRENT_CONTEXT(ctx);
    struct gl_shader_program *const shProg =
-      _mesa_lookup_shader_program_err(ctx, program, "glGetAttribLocation");
+      _mesa_lookup_shader_program_err(ctx, (uintptr_t)program, "glGetAttribLocation");
 
    if (!shProg) {
       return -1;
