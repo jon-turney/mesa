@@ -118,7 +118,10 @@ libglx_la_SOURCES += \
 	  applegl_glx.c
 
 SUBDIRS += apple
-libglx_la_LIBADD += $(builddir)/apple/libappleglx.la
+libglx_la_LIBADD += \
+	$(builddir)/apple/libappleglx.la \
+	$(top_builddir)/src/mesa/libmesa.la
+nodist_EXTRA_lib@GL_LIB@_la_SOURCES = dummy.cpp
 endif
 
 GL_LIBS = \
