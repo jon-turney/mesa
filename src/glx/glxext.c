@@ -869,6 +869,7 @@ __glXInitialize(Display * dpy)
     ** Note: This _must_ be done before calling any other DRI routines
     ** (e.g., those called in AllocAndFetchScreenConfigs).
     */
+#if defined(GLX_USE_DRM)
    if (glx_direct && glx_accel) {
 #if defined(HAVE_DRI3)
       if (!getenv("LIBGL_DRI3_DISABLE"))
@@ -877,6 +878,7 @@ __glXInitialize(Display * dpy)
       dpyPriv->dri2Display = dri2CreateDisplay(dpy);
       dpyPriv->driDisplay = driCreateDisplay(dpy);
    }
+#endif
    if (glx_direct)
       dpyPriv->driswDisplay = driswCreateDisplay(dpy);
 #endif
