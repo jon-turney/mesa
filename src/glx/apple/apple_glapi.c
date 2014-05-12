@@ -39,6 +39,7 @@
 #include <GL/gl.h>
 
 #include "main/glheader.h"
+#include "main/remap.h"
 #include "glapi.h"
 #include "glapitable.h"
 #include "main/dispatch.h"
@@ -53,6 +54,8 @@ struct _glapi_table * __applegl_api = NULL;
 static void _apple_glapi_create_table(void) {
     if (__applegl_api)
         return;
+
+    _mesa_init_remap_table();
 
     __ogl_framework_api = _glapi_create_table_from_handle(apple_cgl_get_dl_handle(), "gl");
     assert(__ogl_framework_api);
