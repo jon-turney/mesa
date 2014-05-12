@@ -65,7 +65,7 @@ static void _apple_glapi_create_table(void) {
     SET_CopyPixels(__applegl_api, __applegl_glCopyPixels);
     SET_CopyColorTable(__applegl_api, __applegl_glCopyColorTable);
     SET_DrawBuffer(__applegl_api, __applegl_glDrawBuffer);
-    SET_DrawBuffers(__applegl_api, __applegl_glDrawBuffers);
+//    SET_DrawBuffers(__applegl_api, __applegl_glDrawBuffers);
     SET_Viewport(__applegl_api, __applegl_glViewport);
 }
 

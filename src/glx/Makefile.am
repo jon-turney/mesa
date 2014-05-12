@@ -67,7 +67,6 @@ libglx_la_SOURCES = \
 	  glxextensions.c \
 	  indirect_glx.c \
 	  indirect.c \
-	  indirect_init.c \
 	  indirect_size.c \
 	  indirect_window_pos.c \
 	  indirect_texture_compression.c \
