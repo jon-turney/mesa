@@ -258,6 +258,12 @@ glx_display_free(struct glx_display *priv)
 
 #endif
 
+#if defined(GLX_USE_APPLEGL)
+   if (priv->appledriDisplay)
+      (*priv->appledriDisplay->destroyDisplay) (priv->appledriDisplay);
+   priv->appledriDisplay = NULL;
+#endif /* GLX_USE_APPLEGL */
+
    free((char *) priv);
 }
 
@@ -794,8 +800,8 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 	 psc = (*priv->driswDisplay->createScreen) (i, priv);
 #endif
 #if defined(GLX_USE_APPLEGL)
-      if (psc == NULL)
-         psc = applegl_create_screen(i, priv);
+      if (psc == NULL && priv->appledriDisplay)
+	 psc = (*priv->appledriDisplay->createScreen) (i, priv);
 #else
       if (psc == NULL)
 	 psc = indirect_create_screen(i, priv);
@@ -889,12 +895,8 @@ __glXInitialize(Display * dpy)
    if (glx_direct)
       dpyPriv->driswDisplay = driswCreateDisplay(dpy);
 #endif
-
 #ifdef GLX_USE_APPLEGL
-   if (!applegl_create_display(dpyPriv)) {
-      free(dpyPriv);
-      return NULL;
-   }
+   dpyPriv->appledriDisplay = applegl_create_display(dpyPriv);
 #endif
    if (!AllocAndFetchScreenConfigs(dpy, dpyPriv)) {
       free(dpyPriv);

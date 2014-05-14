@@ -78,7 +78,7 @@ extern void DRI_glXUseXFont(struct glx_context *ctx,
 
 #endif
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
 
 /**
  * Display dependent methods.  This structure is initialized during the
@@ -591,6 +591,9 @@ struct glx_display
    __GLXDRIdisplay *dri2Display;
    __GLXDRIdisplay *dri3Display;
 #endif
+#ifdef GLX_USE_APPLEGL
+   __GLXDRIdisplay *appledriDisplay;
+#endif
 };
 
 struct glx_drawable {
@@ -807,7 +810,7 @@ applegl_create_context(struct glx_screen *psc,
 			struct glx_config *mode,
 			struct glx_context *shareList, int renderType);
 
-extern int
+extern  __GLXDRIdisplay *
 applegl_create_display(struct glx_display *display);
 #endif
 

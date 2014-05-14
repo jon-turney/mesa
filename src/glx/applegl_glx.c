@@ -42,6 +42,11 @@
 #include "apple/apple_cgl.h"
 #include "glx_error.h"
 
+struct appledri_display
+{
+   __GLXDRIdisplay base;
+};
+
 static void
 applegl_destroy_context(struct glx_context *gc)
 {
@@ -186,13 +191,28 @@ applegl_create_screen(int screen, struct glx_display * priv)
    return psc;
 }
 
-_X_HIDDEN int
+static void
+applegl_destroy_display(__GLXDRIdisplay * dpy)
+{
+   free(dpy);
+}
+
+_X_HIDDEN __GLXDRIdisplay *
 applegl_create_display(struct glx_display *glx_dpy)
 {
-   if(!apple_init_glx(glx_dpy->dpy))
-      return 1;
+   struct appledri_display *pdpyp;
 
-   return GLXBadContext;
+   if (apple_init_glx(glx_dpy->dpy))
+      return NULL;
+
+   pdpyp = malloc(sizeof *pdpyp);
+   if (pdpyp == NULL)
+      return NULL;
+
+   pdpyp->base.destroyDisplay = applegl_destroy_display;
+   pdpyp->base.createScreen = applegl_create_screen;
+   return &pdpyp->base;
+
 }
 
 #endif
