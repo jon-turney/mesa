@@ -120,6 +120,14 @@ libglx_la_LIBADD += \
 nodist_EXTRA_lib@GL_LIB@_la_SOURCES = dummy.cpp
 endif
 
+if HAVE_WINDOWSDRI
+libglx_la_SOURCES += \
+	  windowsgl_glx.c
+
+SUBDIRS += windows
+libglx_la_LIBADD += $(builddir)/windows/libwindowsglx.la
+endif
+
 GL_LIBS = \
 	libglx.la \
 	$(top_builddir)/src/mapi/glapi/libglapi.la \
