@@ -179,19 +179,6 @@ glXQueryGLXPbufferSGIX(Display * dpy, GLXDrawable drawable,
    return 0;
 }
 
-_X_EXPORT GLXDrawable
-glXCreateGLXPbufferSGIX(Display * dpy, GLXFBConfig config,
-                        unsigned int width, unsigned int height,
-                        int *attrib_list)
-{
-   (void) dpy;
-   (void) config;
-   (void) width;
-   (void) height;
-   (void) attrib_list;
-   return None;
-}
-
 #if 0
 /* GLX_SGIX_fbconfig */
 _X_EXPORT int

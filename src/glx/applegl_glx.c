@@ -39,6 +39,7 @@
 #include "apple/apple_glx.h"
 #include "apple/apple_cgl.h"
 #include "glx_error.h"
+#include "dri_common.h"
 
 struct appledri_display
 {
@@ -52,6 +53,11 @@ struct appledri_screen
    __GLXDRIscreen vtable;
 };
 
+struct appledri_drawable
+{
+   __GLXDRIdrawable base;
+};
+
 static void
 applegl_destroy_context(struct glx_context *gc)
 {
@@ -62,7 +68,15 @@ static int
 applegl_bind_context(struct glx_context *gc, struct glx_context *old,
 		     GLXDrawable draw, GLXDrawable read)
 {
+   struct appledri_drawable *pdraw, *pread;
    Display *dpy = gc->psc->dpy;
+
+   pdraw = (struct appledri_drawable *) driFetchDrawable(gc, draw);
+   pread = (struct appledri_drawable *) driFetchDrawable(gc, read);
+
+   if (pdraw == NULL || pread == NULL)
+      return GLXBadDrawable;
+
    bool error = apple_glx_make_current_context(dpy,
 					       (old && old != &dummyContext) ? old->driContext : NULL,
 					       gc ? gc->driContext : NULL, draw);
@@ -206,6 +220,57 @@ applegl_swap_buffers(__GLXDRIdrawable * pdraw, int64_t unused1, int64_t unused2,
    return 0;
 }
 
+static void
+applegl_destroy_drawable(__GLXDRIdrawable * pdraw)
+{
+   struct appledri_screen *psc = (struct appledri_screen *) pdraw->psc;
+   struct appledri_drawable *pdp = (struct appledri_drawable *) pdraw;
+
+   free(pdraw);
+}
+
+static __GLXDRIdrawable *
+applegl_create_drawable(struct glx_screen *base, XID xDrawable,
+                        GLXDrawable drawable, struct glx_config *modes)
+{
+   struct appledri_screen *psc = (struct appledri_screen *) base;
+   struct appledri_drawable *pdp;
+
+   pdp = calloc(1, sizeof(*pdp));
+   if (!pdp)
+      return NULL;
+
+ #if 0
+   {
+      XWindowAttributes xwattr;
+      XVisualInfo *visinfo;
+
+      XGetWindowAttributes(dpy, win, &xwattr);
+
+      visinfo = glXGetVisualFromFBConfig(dpy, config);
+
+      if (NULL == visinfo) {
+         __glXSendError(dpy, GLXBadFBConfig, 0, X_GLXCreateWindow, false);
+         return None;
+      }
+
+      if (visinfo->visualid != XVisualIDFromVisual(xwattr.visual)) {
+         __glXSendError(dpy, BadMatch, 0, X_GLXCreateWindow, true);
+         return None;
+
+         free(visinfo);
+      }
+#endif
+
+   pdp->base.xDrawable = xDrawable;
+   pdp->base.drawable = drawable;
+   pdp->base.psc = &psc->base;
+
+   pdp->base.destroyDrawable = applegl_destroy_drawable;
+
+   return &pdp->base;
+}
+
 static const struct glx_screen_vtable applegl_screen_vtable = {
    .create_context         = applegl_create_context,
    .create_context_attribs = applegl_create_context_attribs,
@@ -227,6 +292,8 @@ applegl_create_screen(int screen, struct glx_display * priv)
    psc->base.vtable = &applegl_screen_vtable;
 
    psp = &psc->vtable;
+   psc->base.driScreen = psp;
+   psp->createDrawable = applegl_create_drawable;
    psp->swapBuffers = applegl_swap_buffers;
 
    return &psc->base;

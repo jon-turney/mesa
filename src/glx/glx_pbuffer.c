@@ -68,7 +68,6 @@ warn_GLX_1_3(Display * dpy, const char *function_name)
    }
 }
 
-#ifndef GLX_USE_APPLEGL
 /**
  * Change a drawable's attribute.
  *
@@ -685,8 +684,6 @@ glXCreateGLXPbufferSGIX(Display * dpy, GLXFBConfigSGIX config,
                                          attrib_list, GL_FALSE);
 }
 
-#endif /* GLX_USE_APPLEGL */
-
 /**
  * Create a new pbuffer.
  */
@@ -936,33 +933,8 @@ glXCreateWindow(Display * dpy, GLXFBConfig config, Window win,
                 const int *attrib_list)
 {
    WARN_ONCE_GLX_1_3(dpy, __func__);
-#ifdef GLX_USE_APPLEGL
-   XWindowAttributes xwattr;
-   XVisualInfo *visinfo;
-
-   (void) attrib_list;          /*unused according to GLX 1.4 */
-
-   XGetWindowAttributes(dpy, win, &xwattr);
-
-   visinfo = glXGetVisualFromFBConfig(dpy, config);
-
-   if (NULL == visinfo) {
-      __glXSendError(dpy, GLXBadFBConfig, 0, X_GLXCreateWindow, false);
-      return None;
-   }
-
-   if (visinfo->visualid != XVisualIDFromVisual(xwattr.visual)) {
-      __glXSendError(dpy, BadMatch, 0, X_GLXCreateWindow, true);
-      return None;
-   }
-
-   free(visinfo);
-
-   return win;
-#else
    return CreateDrawable(dpy, (struct glx_config *) config,
                          (Drawable) win, attrib_list, X_GLXCreateWindow);
-#endif
 }
 
 
@@ -983,9 +955,7 @@ _X_EXPORT void
 glXDestroyWindow(Display * dpy, GLXWindow win)
 {
    WARN_ONCE_GLX_1_3(dpy, __func__);
-#ifndef GLX_USE_APPLEGL
    DestroyDrawable(dpy, (GLXDrawable) win, X_GLXDestroyWindow);
-#endif
 }
 
 #ifndef GLX_USE_APPLEGL
