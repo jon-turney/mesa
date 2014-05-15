@@ -324,7 +324,7 @@ AC_MSG_CHECKING([if ld supports -Bsymbolic])
 AC_LINK_IFELSE(
     [AC_LANG_SOURCE([int main() { return 0;}])],
     [AC_MSG_RESULT([yes])
-        BSYMBOLIC="-Bsymbolic";],
+        BSYMBOLIC="-Wl,-Bsymbolic";],
     [AC_MSG_RESULT([no])
         BSYMBOLIC="";])
 LDFLAGS=$save_LDFLAGS
