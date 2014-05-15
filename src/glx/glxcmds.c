@@ -812,14 +812,6 @@ glXDestroyGLXPixmap(Display * dpy, GLXPixmap glxpixmap)
 _X_EXPORT void
 glXSwapBuffers(Display * dpy, GLXDrawable drawable)
 {
-#ifdef GLX_USE_APPLEGL
-   struct glx_context * gc = __glXGetCurrentContext();
-   if(gc && apple_glx_is_current_drawable(dpy, gc->driContext, drawable)) {
-      apple_glx_swap_buffers(gc->driContext);
-   } else {
-      __glXSendError(dpy, GLXBadCurrentWindow, 0, X_GLXSwapBuffers, false);
-   }
-#else
    struct glx_context *gc;
    GLXContextTag tag;
    CARD8 opcode;
@@ -827,7 +819,7 @@ glXSwapBuffers(Display * dpy, GLXDrawable drawable)
 
    gc = __glXGetCurrentContext();
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
    {
       __GLXDRIdrawable *pdraw = GetGLXDRIDrawable(dpy, drawable);
 
@@ -861,7 +853,6 @@ glXSwapBuffers(Display * dpy, GLXDrawable drawable)
    c = XGetXCBConnection(dpy);
    xcb_glx_swap_buffers(c, tag, drawable);
    xcb_flush(c);
-#endif /* GLX_USE_APPLEGL */
 }
 
 

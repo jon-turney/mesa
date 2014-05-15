@@ -45,6 +45,13 @@ struct appledri_display
    __GLXDRIdisplay base;
 };
 
+struct appledri_screen
+{
+   struct glx_screen base;
+
+   __GLXDRIscreen vtable;
+};
+
 static void
 applegl_destroy_context(struct glx_context *gc)
 {
@@ -178,6 +185,27 @@ applegl_create_context_attribs(struct glx_screen *psc,
    return applegl_create_context(psc, config, shareList, 0);
 }
 
+static int64_t
+applegl_swap_buffers(__GLXDRIdrawable * pdraw, int64_t unused1, int64_t unused2,
+                     int64_t unused3, Bool flush)
+{
+   struct appledri_screen *psc = (struct appledri_screen *) pdraw->psc;
+   Display *dpy = psc->base.dpy;
+
+   if (flush) {
+      glFlush();
+   }
+
+   struct glx_context * gc = __glXGetCurrentContext();
+   if (gc && apple_glx_is_current_drawable(dpy, gc->driContext, pdraw->drawable)) {
+      apple_glx_swap_buffers(gc->driContext);
+   } else {
+      __glXSendError(dpy, GLXBadCurrentWindow, 0, X_GLXSwapBuffers, false);
+   }
+
+   return 0;
+}
+
 static const struct glx_screen_vtable applegl_screen_vtable = {
    .create_context         = applegl_create_context,
    .create_context_attribs = applegl_create_context_attribs,
@@ -188,16 +216,20 @@ static const struct glx_screen_vtable applegl_screen_vtable = {
 _X_HIDDEN struct glx_screen *
 applegl_create_screen(int screen, struct glx_display * priv)
 {
-   struct glx_screen *psc;
+   struct appledri_screen *psc;
+   __GLXDRIscreen *psp;
 
    psc = calloc(1, sizeof *psc);
    if (psc == NULL)
       return NULL;
 
-   glx_screen_init(psc, screen, priv);
-   psc->vtable = &applegl_screen_vtable;
+   glx_screen_init(&psc->base, screen, priv);
+   psc->base.vtable = &applegl_screen_vtable;
 
-   return psc;
+   psp = &psc->vtable;
+   psp->swapBuffers = applegl_swap_buffers;
+
+   return &psc->base;
 }
 
 static void
@@ -223,4 +255,3 @@ applegl_create_display(struct glx_display *glx_dpy)
    return &pdpyp->base;
 
 }
-
