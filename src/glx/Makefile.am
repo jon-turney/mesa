@@ -82,16 +82,20 @@ libglx_la_SOURCES = \
 	  single2.c \
 	  singlepix.c \
 	  vertarr.c \
-	  xfont.c \
 	  glx_pbuffer.c \
 	  glx_query.c \
-	  drisw_glx.c \
 	  glxhash.c
 
 libglx_la_LIBADD = $(top_builddir)/src/loader/libloader.la
 
+if HAVE_DRISW
+libglx_la_SOURCES += \
+	  drisw_glx.c
+endif
+
 if HAVE_DRICOMMON
 libglx_la_SOURCES += \
+	  xfont.c \
 	  dri_common.c
 endif
 
