@@ -294,10 +294,10 @@ CreateContext(Display *dpy, int generic_id, struct glx_config *config,
 
    if (allowDirect && psc->vtable->create_context)
       gc = psc->vtable->create_context(psc, config, shareList, renderType);
-#ifndef GLX_USE_APPLEGL
+
    if (!gc)
       gc = indirect_create_context(psc, config, shareList, renderType);
-#endif
+
    if (!gc)
       return NULL;
 
@@ -665,11 +665,8 @@ glXIsDirect(Display * dpy, GLXContext gc_user)
    else if (gc->isDirect) {
       return True;
    }
-#ifdef GLX_USE_APPLEGL  /* TODO: indirect on darwin */
-   return False;
-#else
+
    return __glXIsDirect(dpy, gc->xid);
-#endif
 }
 
 _X_EXPORT GLXPixmap
