@@ -169,9 +169,20 @@ applegl_create_context(struct glx_screen *psc,
    return gc;
 }
 
+static struct glx_context *
+applegl_create_context_attribs(struct glx_screen *psc,
+                               struct glx_config *config,
+                               struct glx_context *shareList,
+                               unsigned num_attribs,
+                               const uint32_t *attribs,
+                               unsigned *error)
+{
+   return applegl_create_context(psc, config, shareList, 0);
+}
+
 static const struct glx_screen_vtable applegl_screen_vtable = {
    .create_context         = applegl_create_context,
-   .create_context_attribs = NULL,
+   .create_context_attribs = applegl_create_context_attribs,
    .query_renderer_integer = NULL,
    .query_renderer_string  = NULL,
 };
