@@ -43,11 +43,10 @@
 #ifdef GLX_USE_APPLEGL
 #include "apple/apple_glx_context.h"
 #include "apple/apple_glx.h"
-#else
+#endif
 #include <sys/time.h>
 #ifdef XF86VIDMODE
 #include <X11/extensions/xf86vmode.h>
-#endif
 #endif
 #endif
 
@@ -58,7 +57,7 @@
 static const char __glXGLXClientVendorName[] = "Mesa Project and SGI";
 static const char __glXGLXClientVersion[] = "1.4";
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
 
 /**
  * Get the __DRIdrawable for the drawable associated with a GLXContext
@@ -2081,8 +2080,9 @@ __glXGetSyncValuesOML(Display * dpy, GLXDrawable drawable,
 
    return False;
 }
+#endif
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
 _X_HIDDEN GLboolean
 __glxGetMscRate(struct glx_screen *psc,
 		int32_t * numerator, int32_t * denominator)
@@ -2139,7 +2139,7 @@ __glxGetMscRate(struct glx_screen *psc,
 
    return False;
 }
-#endif
+
 
 /**
  * Determine the refresh rate of the specified drawable and display.
@@ -2671,7 +2671,7 @@ _X_EXPORT void (*glXGetProcAddress(const GLubyte * procName)) (void)
 #endif /* __GNUC__ */
 
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
 /**
  * Get the unadjusted system time (UST).  Currently, the UST is measured in
  * microseconds since Epoc.  The actual resolution of the UST may vary from

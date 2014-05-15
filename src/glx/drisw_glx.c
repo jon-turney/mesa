@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
 
 #include <X11/Xlib.h>
 #include "glxclient.h"

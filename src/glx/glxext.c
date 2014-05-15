@@ -787,7 +787,8 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 
    for (i = 0; i < screens; i++, psc++) {
       psc = NULL;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
+#if defined(GLX_USE_DRM)
 #if defined(HAVE_DRI3)
       if (priv->dri3Display)
          psc = (*priv->dri3Display->createScreen) (i, priv);
@@ -796,13 +797,18 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 	 psc = (*priv->dri2Display->createScreen) (i, priv);
       if (psc == NULL && priv->driDisplay)
 	 psc = (*priv->driDisplay->createScreen) (i, priv);
-      if (psc == NULL && priv->driswDisplay)
-	 psc = (*priv->driswDisplay->createScreen) (i, priv);
-#endif
+#endif /* GLX_USE_DRM */
+
 #if defined(GLX_USE_APPLEGL)
       if (psc == NULL && priv->appledriDisplay)
 	 psc = (*priv->appledriDisplay->createScreen) (i, priv);
-#else
+#endif /* GLX_USE_APPLEGL */
+
+      if (psc == NULL && priv->driswDisplay)
+	 psc = (*priv->driswDisplay->createScreen) (i, priv);
+#endif /* GLX_DIRECT_RENDERING */
+
+#if !defined(GLX_USE_APPLEGL)
       if (psc == NULL)
 	 psc = indirect_create_screen(i, priv);
 #endif
@@ -819,7 +825,7 @@ AllocAndFetchScreenConfigs(Display * dpy, struct glx_display * priv)
 __glXInitialize(Display * dpy)
 {
    struct glx_display *dpyPriv, *d;
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
    Bool glx_direct, glx_accel;
 #endif
    int i;
@@ -871,7 +877,7 @@ __glXInitialize(Display * dpy)
 
    dpyPriv->glXDrawHash = __glxHashCreate();
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
    glx_direct = (getenv("LIBGL_ALWAYS_INDIRECT") == NULL);
    glx_accel = (getenv("LIBGL_ALWAYS_SOFTWARE") == NULL);
 
@@ -894,9 +900,10 @@ __glXInitialize(Display * dpy)
 #endif
    if (glx_direct)
       dpyPriv->driswDisplay = driswCreateDisplay(dpy);
-#endif
 #ifdef GLX_USE_APPLEGL
-   dpyPriv->appledriDisplay = applegl_create_display(dpyPriv);
+   if (glx_direct && glx_accel)
+      dpyPriv->appledriDisplay = applegl_create_display(dpyPriv);
+#endif
 #endif
    if (!AllocAndFetchScreenConfigs(dpy, dpyPriv)) {
       free(dpyPriv);

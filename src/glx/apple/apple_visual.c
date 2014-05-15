@@ -87,7 +87,7 @@ apple_visual_create_pfobj(CGLPixelFormatObj * pfobj, const struct glx_config * m
       attr[numattr++] = kCGLPFAColorSize;
       attr[numattr++] = 32;
    }
-   else if (getenv("LIBGL_ALWAYS_SOFTWARE") != NULL) {
+   else if (getenv("LIBGL_ALWAYS_SOFTWARE_NATIVE") != NULL) {
       apple_glx_diagnostic
          ("Software rendering requested.  Using kCGLRendererGenericFloatID.\n");
       attr[numattr++] = kCGLPFARendererID;

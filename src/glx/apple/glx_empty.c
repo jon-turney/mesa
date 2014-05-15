@@ -152,18 +152,6 @@ glXReleaseBuffersMESA(Display * dpy, GLXDrawable d)
 }
 
 
-_X_EXPORT GLXPixmap
-glXCreateGLXPixmapMESA(Display * dpy, XVisualInfo * visual,
-                       Pixmap pixmap, Colormap cmap)
-{
-   (void) dpy;
-   (void) visual;
-   (void) pixmap;
-   (void) cmap;
-   return 0;
-}
-
-
 /**
  * GLX_MESA_copy_sub_buffer
  */

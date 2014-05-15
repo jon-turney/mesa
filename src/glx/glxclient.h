@@ -504,7 +504,7 @@ struct glx_screen
    Display *dpy;
    int scr;
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
     /**
      * Per screen direct rendering interface functions and data.
      */
@@ -580,16 +580,18 @@ struct glx_display
 
    __glxHashTable *glXDrawHash;
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#if defined(GLX_DIRECT_RENDERING)
    __glxHashTable *drawHash;
 
     /**
      * Per display direct rendering interface functions and data.
      */
    __GLXDRIdisplay *driswDisplay;
+#ifdef GLX_USE_DRM
    __GLXDRIdisplay *driDisplay;
    __GLXDRIdisplay *dri2Display;
    __GLXDRIdisplay *dri3Display;
+#endif /* GLX_USE_DRM */
 #endif
 #ifdef GLX_USE_APPLEGL
    __GLXDRIdisplay *appledriDisplay;
@@ -783,21 +785,25 @@ extern GLboolean __glXGetMscRateOML(Display * dpy, GLXDrawable drawable,
                                     int32_t * numerator,
                                     int32_t * denominator);
 
-#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
+#ifdef GLX_DIRECT_RENDERING
 extern GLboolean
 __glxGetMscRate(struct glx_screen *psc,
 		int32_t * numerator, int32_t * denominator);
+#endif
 
+#if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
 /* So that dri2.c:DRI2WireToEvent() can access
  * glx_info->codes->first_event */
 XExtDisplayInfo *__glXFindDisplay (Display *dpy);
 
 extern void
 GarbageCollectDRIDrawables(struct glx_screen *psc);
+#endif
 
+#ifdef GLX_DIRECT_RENDERING
 extern __GLXDRIdrawable *
 GetGLXDRIDrawable(Display *dpy, GLXDrawable drawable);
-#endif
+#endif /* GLX_DIRECT_RENDERING */
 
 extern struct glx_screen *GetGLXScreenConfigs(Display * dpy, int scrn);
 
