@@ -32,8 +32,6 @@
 #include "indirect.h"
 #include "indirect_vertex_array.h"
 
-#ifndef GLX_USE_APPLEGL
-
 /*****************************************************************************/
 
 /**
@@ -211,5 +209,3 @@ __indirect_glInterleavedArrays(GLenum format, GLsizei stride,
                               trueStride,
                               (const char *) pointer + offsets[3]);
 }
-
-#endif
