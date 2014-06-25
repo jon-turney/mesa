@@ -839,6 +839,9 @@ __glXInitialize(Display * dpy)
    struct glx_display *dpyPriv, *d;
 #if defined(GLX_DIRECT_RENDERING) && !defined(GLX_USE_APPLEGL)
    Bool glx_direct, glx_accel;
+#ifdef GLX_USE_WINDOWSGL
+   Bool glx_wgl;
+#endif
 #endif
    int i;
 
@@ -922,7 +925,8 @@ __glXInitialize(Display * dpy)
 #endif
 
 #ifdef GLX_USE_WINDOWSGL
-   if (glx_direct && glx_accel)
+   glx_wgl = !(getenv("LIBGL_USE_WGL") == NULL);
+   if (glx_direct && glx_accel && glx_wgl)
       dpyPriv->windowsdriDisplay = driwindowsCreateDisplay(dpy);
 #endif
 
