@@ -45,6 +45,7 @@ AM_CPPFLAGS = \
 	-D_EGL_MAIN=_eglMain
 
 AM_LDFLAGS = \
+	-shrext .so \
 	-module \
 	-no-undefined \
 	-avoid-version \
