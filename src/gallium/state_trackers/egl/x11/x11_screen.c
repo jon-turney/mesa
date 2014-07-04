@@ -26,7 +26,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef GLX_DIRECT_RENDERING
 #include <xf86drm.h>
+#endif
 #include <X11/Xlibint.h>
 #include <X11/extensions/XShm.h>
 
@@ -34,7 +36,9 @@
 #include "egllog.h"
 
 #include "x11_screen.h"
+#ifdef GLX_DIRECT_RENDERING
 #include "dri2.h"
+#endif
 #include "glxinit.h"
 
 struct x11_screen {

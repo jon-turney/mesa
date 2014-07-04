@@ -27,7 +27,9 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#ifdef GLX_DIRECT_RENDERING
 #include <X11/extensions/dri2tokens.h>
+#endif
 #include "GL/gl.h" /* for GL types needed by __GLcontextModes */
 #include "glcore.h"  /* for __GLcontextModes */
 #include "pipe/p_compiler.h"
