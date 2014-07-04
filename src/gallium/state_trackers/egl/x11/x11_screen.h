@@ -27,7 +27,9 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#ifdef HAVE_EGL_DRIVER_DRI2
 #include <X11/extensions/dri2tokens.h>
+#endif
 #include "GL/gl.h" /* for GL types needed by __GLcontextModes */
 #include "glcore.h"  /* for __GLcontextModes */
 #include "pipe/p_compiler.h"
@@ -69,8 +71,6 @@ x11_screen_get_visuals(struct x11_screen *xscr, int *num_visuals);
 uint
 x11_drawable_get_depth(struct x11_screen *xscr, Drawable drawable);
 
-#ifdef GLX_DIRECT_RENDERING
-
 /* GLX */
 const __GLcontextModes *
 x11_screen_get_glx_configs(struct x11_screen *xscr);
@@ -86,6 +86,8 @@ x11_context_modes_destroy(__GLcontextModes *modes);
 
 unsigned
 x11_context_modes_count(const __GLcontextModes *modes);
+
+#ifdef HAVE_EGL_DRIVER_DRI2
 
 /* DRI2 */
 const char *
@@ -128,6 +130,6 @@ x11_drawable_get_buffers(struct x11_screen *xscr, Drawable drawable,
                          int *width, int *height, unsigned int *attachments,
                          boolean with_format, int num_ins, int *num_outs);
 
-#endif /* GLX_DIRECT_RENDERING */
+#endif /* HAVE_EGL_DRIVER_DRI2 */
 
 #endif /* _X11_SCREEN_H_ */

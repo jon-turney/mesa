@@ -38,7 +38,7 @@ noinst_LTLIBRARIES = libegl.la
 libegl_la_SOURCES = $(common_FILES)
 
 if HAVE_EGL_PLATFORM_X11
-libegl_la_SOURCES += $(x11_FILES) $(x11_drm_FILES)
+libegl_la_SOURCES += $(x11_FILES)
 AM_CFLAGS += \
 	$(X11_INCLUDES) \
 	$(LIBDRM_CFLAGS) \
@@ -48,6 +48,10 @@ AM_CPPFLAGS += \
 	-I$(top_srcdir)/src/mapi \
 	-I$(top_srcdir)/src/mesa \
 	-DHAVE_X11_BACKEND
+if HAVE_EGL_DRIVER_DRI2
+libegl_la_SOURCES += $(x11_drm_FILES)
+AM_CFLAGS += -DHAVE_EGL_DRIVER_DRI2
+endif
 endif
 
 if HAVE_EGL_PLATFORM_WAYLAND

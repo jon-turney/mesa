@@ -35,17 +35,22 @@ static struct native_display *
 native_create_display(void *dpy, boolean use_sw)
 {
    struct native_display *ndpy = NULL;
+
+#ifdef HAVE_EGL_DRIVER_DRI2
    boolean force_sw;
 
    force_sw = debug_get_bool_option("EGL_SOFTWARE", FALSE);
 
    if (force_sw || use_sw) {
       _eglLog(_EGL_INFO, "use software fallback");
+#endif
       ndpy = x11_create_ximage_display((Display *) dpy, x11_event_handler);
+#ifdef HAVE_EGL_DRIVER_DRI2
    }
    else {
       ndpy = x11_create_dri2_display((Display *) dpy, x11_event_handler);
    }
+#endif
 
    return ndpy;
 }

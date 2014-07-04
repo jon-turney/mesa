@@ -40,7 +40,7 @@ else:
         ])
         sources.append(env.ParseSourceList('Makefile.sources', 'x11_FILES'))
         if env['drm']:
-            env.Append(CPPDEFINES = ['GLX_DIRECT_RENDERING'])
+            env.Append(CPPDEFINES = ['HAVE_EGL_DRIVER_DRI2'])
             sources.append(env.ParseSourceList('Makefile.sources', 'x11_drm_FILES'))
     if env['drm'] and False:
         # XXX: Disabled as it depends on gbm, which is not yet built with scons

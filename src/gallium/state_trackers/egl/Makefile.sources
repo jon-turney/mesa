@@ -46,12 +46,12 @@ x11_FILES := \
 	x11/glcore.h \
 	x11/glxinit.c \
 	x11/glxinit.h \
-	x11/native_dri2.c \
+	x11/x11_screen.c \
+	x11/x11_screen.h \
 	x11/native_x11.c \
 	x11/native_x11.h \
 	x11/native_ximage.c
 
 x11_drm_FILES := \
 	x11/dri2.c \
-	x11/x11_screen.c \
-	x11/x11_screen.h
+	x11/native_dri2.c

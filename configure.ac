@@ -1503,7 +1503,7 @@ if test "x$enable_egl" = xyes; then
     AC_CHECK_FUNC(mincore, [DEFINES="$DEFINES -DHAVE_MINCORE"])
 
     if test "$enable_static" != yes; then
-        if test "x$enable_dri" = xyes; then
+        if test "x$enable_dri" = xyes && test "x$dri_platform" = xdrm; then
 	    HAVE_EGL_DRIVER_DRI2=1
 	fi
 
@@ -1511,6 +1511,51 @@ if test "x$enable_egl" = xyes; then
 fi
 AM_CONDITIONAL(HAVE_EGL, test "x$enable_egl" = xyes)
 AC_SUBST([EGL_LIB_DEPS])
+
+dnl
+dnl EGL Gallium configuration
+dnl
+if test "x$enable_gallium_egl" = xyes; then
+    if test -z "$with_gallium_drivers"; then
+        AC_MSG_ERROR([cannot enable egl_gallium without Gallium])
+    fi
+    if test "x$enable_egl" = xno; then
+        AC_MSG_ERROR([cannot enable egl_gallium without EGL])
+    fi
+    if test "x$dri_platform" = xdrm && test "x$have_libdrm" != xyes; then
+        AC_MSG_ERROR([egl_gallium requires libdrm >= $LIBDRM_REQUIRED])
+    fi
+# XXX: Uncomment once converted to use static/shared pipe-drivers
+#    enable_gallium_loader=$enable_shared_pipe_drivers
+fi
+AM_CONDITIONAL(HAVE_GALLIUM_EGL, test "x$enable_gallium_egl" = xyes)
+
+dnl
+dnl gbm Gallium configuration
+dnl
+if test "x$enable_gallium_gbm" = xauto; then
+    case "$enable_gbm$enable_gallium_egl$enable_dri$with_egl_platforms" in
+        yesyesyes*drm*)
+            enable_gallium_gbm=yes ;;
+         *)
+            enable_gallium_gbm=no ;;
+    esac
+fi
+if test "x$enable_gallium_gbm" = xyes; then
+    if test -z "$with_gallium_drivers"; then
+        AC_MSG_ERROR([cannot enable gbm_gallium without Gallium])
+    fi
+    if test "x$enable_gbm" = xno; then
+        AC_MSG_ERROR([cannot enable gbm_gallium without gbm])
+    fi
+
+    if test "x$enable_gallium_egl" != xyes; then
+        AC_MSG_ERROR([gbm_gallium is only used by egl_gallium])
+    fi
+
+    enable_gallium_loader=$enable_shared_pipe_drivers
+fi
+AM_CONDITIONAL(HAVE_GALLIUM_GBM, test "x$enable_gallium_gbm" = xyes)
 
 dnl
 dnl XA configuration
@@ -1751,7 +1796,14 @@ for plat in $egl_platforms; do
 		;;
 
 	x11)
-		PKG_CHECK_MODULES([XCB_DRI2], [x11-xcb xcb xcb-dri2 >= $XCBDRI2_REQUIRED xcb-xfixes])
+		# xcb-dri2 >= $XCBDRI2_REQUIRED is only needed if HAVE_EGL_DRIVER_DRI2
+		egl_x11_modules="x11-xcb xcb xcb-xfixes"
+		if test "x$HAVE_EGL_DRIVER_DRI2" != "x"; then
+		   egl_x11_modules="$egl_x11_modules xcb-dri2 >= $XCBDRI2_REQUIRED"
+	        fi
+
+		# XCB_DRI2 is misnamed it's really EGL_X11 or something
+		PKG_CHECK_MODULES([XCB_DRI2], [$egl_x11_modules])
 		;;
 
 	drm)
