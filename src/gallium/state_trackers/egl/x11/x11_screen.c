@@ -26,7 +26,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef HAVE_EGL_DRIVER_DRI2
 #include <xf86drm.h>
+#endif
 #include <X11/Xlibint.h>
 #include <X11/extensions/XShm.h>
 
@@ -34,7 +36,9 @@
 #include "egllog.h"
 
 #include "x11_screen.h"
+#ifdef HAVE_EGL_DRIVER_DRI2
 #include "dri2.h"
+#endif
 #include "glxinit.h"
 
 struct x11_screen {
@@ -97,17 +101,15 @@ x11_screen_destroy(struct x11_screen *xscr)
    free(xscr->dri_driver);
    free(xscr->dri_device);
 
-#ifdef GLX_DIRECT_RENDERING
    /* xscr->glx_dpy will be destroyed with the X display */
    if (xscr->glx_dpy)
       xscr->glx_dpy->xscr = NULL;
-#endif
 
    free(xscr->visuals);
    FREE(xscr);
 }
 
-#ifdef GLX_DIRECT_RENDERING
+#ifdef HAVE_EGL_DRIVER_DRI2
 
 static boolean
 x11_screen_init_dri2(struct x11_screen *xscr)
@@ -122,6 +124,8 @@ x11_screen_init_dri2(struct x11_screen *xscr)
    return (xscr->dri_major >= 0);
 }
 
+#endif /* HAVE_EGL_DRIVER_DRI2 */
+
 static boolean
 x11_screen_init_glx(struct x11_screen *xscr)
 {
@@ -129,8 +133,6 @@ x11_screen_init_glx(struct x11_screen *xscr)
       xscr->glx_dpy = __glXInitialize(xscr->dpy);
    return (xscr->glx_dpy != NULL);
 }
-
-#endif /* GLX_DIRECT_RENDERING */
 
 /**
  * Return true if the screen supports the extension.
@@ -144,10 +146,10 @@ x11_screen_support(struct x11_screen *xscr, enum x11_screen_extension ext)
    case X11_SCREEN_EXTENSION_XSHM:
       supported = XShmQueryExtension(xscr->dpy);
       break;
-#ifdef GLX_DIRECT_RENDERING
    case X11_SCREEN_EXTENSION_GLX:
       supported = x11_screen_init_glx(xscr);
       break;
+#ifdef HAVE_EGL_DRIVER_DRI2
    case X11_SCREEN_EXTENSION_DRI2:
       supported = x11_screen_init_dri2(xscr);
       break;
@@ -208,7 +210,7 @@ x11_drawable_get_depth(struct x11_screen *xscr, Drawable drawable)
    return depth;
 }
 
-#ifdef GLX_DIRECT_RENDERING
+#ifdef HAVE_EGL_DRIVER_DRI2
 
 /**
  * Return the GLX fbconfigs.
@@ -485,4 +487,4 @@ GetGLXDrawable(Display *dpy, XID drawable)
    return NULL;
 }
 
-#endif /* GLX_DIRECT_RENDERING */
+#endif /* HAVE_EGL_DRIVER_DRI2 */

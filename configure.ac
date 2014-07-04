@@ -1244,7 +1244,7 @@ if test "x$enable_egl" = xyes; then
     AC_CHECK_FUNC(mincore, [DEFINES="$DEFINES -DHAVE_MINCORE"])
 
     if test "$enable_static" != yes; then
-        if test "x$enable_dri" = xyes; then
+        if test "x$enable_dri" = xyes && test "x$dri_platform" = xdrm; then
 	    HAVE_EGL_DRIVER_DRI2=1
 	fi
 
@@ -1263,7 +1263,7 @@ if test "x$enable_gallium_egl" = xyes; then
     if test "x$enable_egl" = xno; then
         AC_MSG_ERROR([cannot enable egl_gallium without EGL])
     fi
-    if test "x$have_libdrm" != xyes; then
+    if test "x$dri_platform" = xdrm && test "x$have_libdrm" != xyes; then
         AC_MSG_ERROR([egl_gallium requires libdrm >= $LIBDRM_REQUIRED])
     fi
 
@@ -1496,7 +1496,14 @@ for plat in $egl_platforms; do
 		;;
 
 	x11)
-		PKG_CHECK_MODULES([XCB_DRI2], [x11-xcb xcb-dri2 >= $XCBDRI2_REQUIRED xcb-xfixes])
+		# xcb-dri2 is only needed if HAVE_EGL_DRIVER_DRI2
+		egl_x11_modules="x11-xcb xcb-xfixes"
+		if test "x$HAVE_EGL_DRIVER_DRI2" != "x"; then
+		   egl_x11_modules="$egl_x11_modules xcb-dri2 >= $XCBDRI2_REQUIRED"
+	        fi
+
+		# XCB_DRI2 is misnamed it's really EGL_X11 or something
+		PKG_CHECK_MODULES([XCB_DRI2], [$egl_x11_modules])
 		;;
 
 	drm)
