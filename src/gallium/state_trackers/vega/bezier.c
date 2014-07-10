@@ -24,6 +24,7 @@
  *
  **************************************************************************/
 
+#undef __STRICT_ANSI__  /* for M_PI */
 #include "bezier.h"
 
 #include "matrix.h"

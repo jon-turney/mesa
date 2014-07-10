@@ -26,6 +26,7 @@
  **************************************************************************/
 
 
+#undef __STRICT_ANSI__
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
