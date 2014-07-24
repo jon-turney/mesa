@@ -24,7 +24,7 @@ SHARED_GLAPI_CFLAGS = -DGLX_SHARED_GLAPI
 SHARED_GLAPI_LIB = $(top_builddir)/src/mapi/shared-glapi/libglapi.la
 endif
 
-SUBDIRS=. tests
+SUBDIRS =
 
 if HAVE_XF86VIDMODE
 EXTRA_DEFINES_XF86VIDMODE = -DXF86VIDMODE
@@ -86,6 +86,8 @@ libglx_la_SOURCES = \
 	  glx_query.c \
 	  glxhash.c
 
+libglx_la_LIBADD = $(top_builddir)/src/loader/libloader.la
+
 if HAVE_DRISW
 libglx_la_SOURCES += \
 	  drisw_glx.c
@@ -116,7 +118,15 @@ libglx_la_SOURCES += \
 	  applegl_glx.c
 endif
 
-libglx_la_LIBADD = $(top_builddir)/src/loader/libloader.la
+if HAVE_WINDOWSDRI
+libglx_la_SOURCES += \
+	  driwindows_glx.c
+
+SUBDIRS += windows
+libglx_la_LIBADD += \
+	  $(builddir)/windows/libwindowsdri.la \
+	  $(builddir)/windows/libwindowsglx.la
+endif
 
 GL_LIBS = \
 	libglx.la \
@@ -134,5 +144,11 @@ GL_LDFLAGS = \
 lib@GL_LIB@_la_SOURCES =
 lib@GL_LIB@_la_LIBADD = $(GL_LIBS)
 lib@GL_LIB@_la_LDFLAGS = $(GL_LDFLAGS)
+
+if HAVE_WINDOWSDRI
+lib@GL_LIB@_la_LDFLAGS += -lgdi32 -lopengl32 -Wl,--disable-stdcall-fixup
+endif
+
+SUBDIRS += . tests
 
 include $(top_srcdir)/install-lib-links.mk
