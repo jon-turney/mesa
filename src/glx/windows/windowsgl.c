@@ -203,6 +203,7 @@ int windows_bind_context(windowsContext *context, windowsDrawable *draw, windows
 
       if (!ret) {
          printf("wglMakeContextCurrentARB error: %08x\n", GetLastError());
+         return FALSE;
       }
    }
    else
@@ -211,6 +212,7 @@ int windows_bind_context(windowsContext *context, windowsDrawable *draw, windows
       BOOL ret = wglMakeCurrent(drawDc, context->ctx);
       if (!ret) {
          printf("wglMakeCurrent error: %08x\n", GetLastError());
+         return FALSE;
       }
    }
 
@@ -354,6 +356,8 @@ windows_extensions_test(HDC hdc, void *args)
    const char *(*proc)(int) = dlsym(dlhandle, "glGetString");
 
    r->gl_extensions = strdup(proc(GL_EXTENSIONS));
+
+   wglResolveExtensionProcs();
    r->wgl_extensions = strdup(wglGetExtensionsStringARB(hdc));
 }
 

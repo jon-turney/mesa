@@ -23,59 +23,86 @@
 
 /*
   Wrapper functions for calling WGL extension functions
-
-  XXX: should handle wglGetProcAddress returning NULL better
  */
 
 #include "wgl.h"
 
+#include <stdio.h>
+
+#define RESOLVE_DECL(type) \
+    static type type##proc = NULL;
+
+#define PRERESOLVE(type, symbol) \
+    type##proc = (type)wglGetProcAddress(symbol); \
+    if (type##proc == NULL) \
+       printf("Can't resolve \"%s\"\n", symbol);
+
+#define CHECK_RESOLVED(type, retval) \
+  if (type##proc == NULL) { \
+    return retval; \
+  }
+
+#define RESOLVED_PROC(type) type##proc
+
+RESOLVE_DECL(PFNWGLGETEXTENSIONSSTRINGARBPROC);
+RESOLVE_DECL(PFNWGLCREATECONTEXTATTRIBSARBPROC);
+RESOLVE_DECL(PFNWGLMAKECONTEXTCURRENTARBPROC);
+RESOLVE_DECL(PFNWGLCREATEPBUFFERARBPROC);
+RESOLVE_DECL(PFNWGLGETPBUFFERDCARBPROC);
+RESOLVE_DECL(PFNWGLRELEASEPBUFFERDCARBPROC);
+RESOLVE_DECL(PFNWGLDESTROYPBUFFERARBPROC);
+
+void wglResolveExtensionProcs(void)
+{
+  PRERESOLVE(PFNWGLGETEXTENSIONSSTRINGARBPROC, "wglGetExtensionsStringARB");
+  PRERESOLVE(PFNWGLCREATECONTEXTATTRIBSARBPROC, "wglCreateContextAttribsARB");
+  PRERESOLVE(PFNWGLMAKECONTEXTCURRENTARBPROC, "wglMakeContextCurrentARB");
+  PRERESOLVE(PFNWGLCREATEPBUFFERARBPROC, "wglCreatePbufferARB");
+  PRERESOLVE(PFNWGLGETPBUFFERDCARBPROC, "wglGetPbufferDCARB");
+  PRERESOLVE(PFNWGLRELEASEPBUFFERDCARBPROC, "wglReleasePbufferDCARB");
+  PRERESOLVE(PFNWGLDESTROYPBUFFERARBPROC, "wglDestroyPbufferARB");
+}
+
 const char *wglGetExtensionsStringARB(HDC hdc_)
 {
-   PFNWGLGETEXTENSIONSSTRINGARBPROC proc;
-   proc = (PFNWGLGETEXTENSIONSSTRINGARBPROC) wglGetProcAddress("wglGetExtensionsStringARB");
-   return proc(hdc_);
+   CHECK_RESOLVED(PFNWGLGETEXTENSIONSSTRINGARBPROC, "");
+   return RESOLVED_PROC(PFNWGLGETEXTENSIONSSTRINGARBPROC)(hdc_);
 }
 
 HGLRC wglCreateContextAttribsARB(HDC hdc_, HGLRC hShareContext_,
                                      const int *attribList_)
 {
-   PFNWGLCREATECONTEXTATTRIBSARBPROC proc;
-   proc = (PFNWGLCREATECONTEXTATTRIBSARBPROC) wglGetProcAddress("wglCreateContextAttribsARB");
-   return proc(hdc_, hShareContext_, attribList_);
+   CHECK_RESOLVED(PFNWGLCREATECONTEXTATTRIBSARBPROC, NULL);
+   return RESOLVED_PROC(PFNWGLCREATECONTEXTATTRIBSARBPROC)(hdc_, hShareContext_, attribList_);
 }
 
 BOOL wglMakeContextCurrentARB(HDC hDrawDC_, HDC hReadDC_, HGLRC hglrc_)
 {
-   PFNWGLMAKECONTEXTCURRENTARBPROC proc;
-   proc = (PFNWGLMAKECONTEXTCURRENTARBPROC)wglGetProcAddress("wglMakeContextCurrentARB");
-   return proc(hDrawDC_, hReadDC_, hglrc_ );
+   CHECK_RESOLVED(PFNWGLMAKECONTEXTCURRENTARBPROC, FALSE);
+   return RESOLVED_PROC(PFNWGLMAKECONTEXTCURRENTARBPROC)(hDrawDC_, hReadDC_, hglrc_);
 }
 
 HPBUFFERARB wglCreatePbufferARB(HDC hDC_, int iPixelFormat_, int iWidth_,
                                 int iHeight_, const int *piAttribList_)
 {
-   PFNWGLCREATEPBUFFERARBPROC proc;
-   proc = (PFNWGLCREATEPBUFFERARBPROC)wglGetProcAddress("wglCreatePbufferARB");
-   return proc (hDC_, iPixelFormat_, iWidth_, iHeight_, piAttribList_ );
+   CHECK_RESOLVED(PFNWGLCREATEPBUFFERARBPROC, NULL);
+   return RESOLVED_PROC(PFNWGLCREATEPBUFFERARBPROC)(hDC_, iPixelFormat_, iWidth_, iHeight_, piAttribList_);
 }
 
 HDC wglGetPbufferDCARB(HPBUFFERARB hPbuffer_)
 {
-   PFNWGLGETPBUFFERDCARBPROC proc;
-   proc = (PFNWGLGETPBUFFERDCARBPROC)wglGetProcAddress("wglGetPbufferDCARB");
-   return proc(hPbuffer_ );
+   CHECK_RESOLVED(PFNWGLGETPBUFFERDCARBPROC, NULL);
+   return RESOLVED_PROC(PFNWGLGETPBUFFERDCARBPROC)(hPbuffer_);
 }
 
 int wglReleasePbufferDCARB(HPBUFFERARB hPbuffer_, HDC hDC_)
 {
-   PFNWGLRELEASEPBUFFERDCARBPROC proc;
-   proc = (PFNWGLRELEASEPBUFFERDCARBPROC)wglGetProcAddress("wglReleasePbufferDCARB");
-   return proc(hPbuffer_, hDC_ );
+   CHECK_RESOLVED(PFNWGLRELEASEPBUFFERDCARBPROC, 0)
+   return RESOLVED_PROC(PFNWGLRELEASEPBUFFERDCARBPROC)(hPbuffer_, hDC_);
 }
 
 BOOL wglDestroyPbufferARB(HPBUFFERARB hPbuffer_)
 {
-   PFNWGLDESTROYPBUFFERARBPROC proc;
-   proc = (PFNWGLDESTROYPBUFFERARBPROC)wglGetProcAddress("wglDestroyPbufferARB");
-   return proc(hPbuffer_);
+   CHECK_RESOLVED(PFNWGLDESTROYPBUFFERARBPROC, FALSE);
+   return RESOLVED_PROC(PFNWGLDESTROYPBUFFERARBPROC)(hPbuffer_);
 }

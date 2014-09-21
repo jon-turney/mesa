@@ -29,6 +29,8 @@
 #include <GL/gl.h>
 #include <GL/wglext.h>
 
+void wglResolveExtensionProcs(void);
+
 const char *wglGetExtensionsStringARB(HDC hdc_);
 HGLRC wglCreateContextAttribsARB(HDC hdc_, HGLRC hShareContext_,
                                  const int *attribList_);
