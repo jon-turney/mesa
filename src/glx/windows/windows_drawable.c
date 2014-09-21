@@ -58,13 +58,13 @@ static struct windowsdrawable_callbacks window_callbacks = {
 static
 HDC pixmap_getdc(windowsDrawable *d)
 {
-   return wglGetPbufferDCARB(d->hPbuffer);
+   return d->dibDC;
 }
 
 static
 void pixmap_releasedc(windowsDrawable *d, HDC dc)
 {
-   wglReleasePbufferDCARB(d->hPbuffer, dc);
+   GdiFlush();
 }
 
 static struct windowsdrawable_callbacks pixmap_callbacks = {
@@ -80,13 +80,13 @@ static struct windowsdrawable_callbacks pixmap_callbacks = {
 static
 HDC pbuffer_getdc(windowsDrawable *d)
 {
-   return d->dibDC;
+   return wglGetPbufferDCARB(d->hPbuffer);
 }
 
 static
 void pbuffer_releasedc(windowsDrawable *d, HDC dc)
 {
-   GdiFlush();
+   wglReleasePbufferDCARB(d->hPbuffer, dc);
 }
 
 static struct windowsdrawable_callbacks pbuffer_callbacks = {
@@ -163,5 +163,31 @@ windows_create_drawable(int type, void *handle)
 void
 windows_destroy_drawable(windowsDrawable *drawable)
 {
+   switch (drawable->callbacks->type)
+   {
+   case WindowsDRIDrawableWindow:
+      break;
+
+   case WindowsDRIDrawablePixmap:
+   {
+      // Select the default DIB into the DC
+      SelectObject(drawable->dibDC, drawable->hOldDIB);
+
+      // delete the screen-compatible DC
+      DeleteDC(drawable->dibDC);
+
+      // Delete the DIB
+      DeleteObject(drawable->hDIB);
+
+      // Close the file mapping object
+      CloseHandle(drawable->hSection);
+   }
+   break;
+
+   case WindowsDRIDrawablePbuffer:
+
+      break;
+   }
+
    free(drawable);
 }
