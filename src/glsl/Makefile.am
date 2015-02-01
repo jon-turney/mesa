@@ -234,18 +234,18 @@ dist-hook:
 
 nir/nir_constant_expressions.c: nir/nir_opcodes.py nir/nir_constant_expressions.py nir/nir_constant_expressions.h
 	$(MKDIR_P) nir;							\
-	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_constant_expressions.py > $@
+	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_constant_expressions.py > $@ || true
 
 nir/nir_opcodes.h: nir/nir_opcodes.py nir/nir_opcodes_h.py
 	$(MKDIR_P) nir;							\
-	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_opcodes_h.py > $@
+	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_opcodes_h.py > $@ || true
 
 nir/nir.h: nir/nir_opcodes.h
 
 nir/nir_opcodes.c: nir/nir_opcodes.py nir/nir_opcodes_c.py
 	$(MKDIR_P) nir;							\
-	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_opcodes_c.py > $@
+	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_opcodes_c.py > $@ || true
 
 nir/nir_opt_algebraic.c: nir/nir_opt_algebraic.py nir/nir_algebraic.py
 	$(MKDIR_P) nir;							\
-	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_opt_algebraic.py > $@
+	$(PYTHON2) $(PYTHON_FLAGS) $(srcdir)/nir/nir_opt_algebraic.py > $@ || true
