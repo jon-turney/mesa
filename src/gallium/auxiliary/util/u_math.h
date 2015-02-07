@@ -528,7 +528,7 @@ unsigned ffs( unsigned u )
 
    return i;
 }
-#elif defined(__MINGW32__) || defined(PIPE_OS_ANDROID)
+#elif defined(__MINGW32__) || defined(__CYGWIN__) || defined(PIPE_OS_ANDROID)
 #define ffs __builtin_ffs
 #define ffsll __builtin_ffsll
 #endif
