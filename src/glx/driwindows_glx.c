@@ -224,7 +224,7 @@ driwindows_create_context_attribs(struct glx_screen *base,
    windowsContext *shared = NULL;
 
    int i;
-   uint32_t renderType;
+   uint32_t renderType = GLX_RGBA_TYPE;
 
    /* Extract renderType from attribs */
    for (i = 0; i < num_attribs; i++) {

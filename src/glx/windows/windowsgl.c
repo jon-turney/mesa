@@ -107,11 +107,17 @@ windows_create_context(int pxfi, windowsContext *shared)
 
    gc->ctx = wglCreateContext(hdc);
 
-   if (shared)
+   if (shared && gc->ctx)
       wglShareLists(shared->ctx, gc->ctx);
 
    ReleaseDC(hwnd, hdc);
    DestroyWindow(hwnd);
+
+   if (!gc->ctx)
+   {
+     free(gc);
+     return NULL;
+   }
 
    return gc;
 }
@@ -155,15 +161,24 @@ windows_create_context_attribs(int pxfi, windowsContext *shared, const int *attr
                                0, 0, 0, 0,
                                NULL, NULL, GetModuleHandle(NULL), NULL);
    HDC hdc = GetDC(hwnd);
+   HGLRC shareContext = NULL;
+   if (shared)
+      shareContext = shared->ctx;
 
    // We must set the windows pixel format before we can create a WGL context
    gc->pxfi = pxfi;
    SetPixelFormat(hdc, gc->pxfi, NULL);
 
-   gc->ctx = wglCreateContextAttribsARB(hdc, shared->ctx, attribList);
+   gc->ctx = wglCreateContextAttribsARB(hdc, shareContext, attribList);
 
    ReleaseDC(hwnd, hdc);
    DestroyWindow(hwnd);
+
+   if (!gc->ctx)
+   {
+     free(gc);
+     return NULL;
+   }
 
    return gc;
 }
