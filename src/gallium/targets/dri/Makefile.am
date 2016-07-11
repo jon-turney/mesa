@@ -26,6 +26,7 @@ gallium_dri_la_LDFLAGS = \
 	-shrext .so \
 	-module \
 	-avoid-version \
+	-no-undefined \
 	$(GC_SECTIONS)
 
 if HAVE_LD_VERSION_SCRIPT
@@ -103,6 +104,12 @@ gallium_dri_la_LIBADD += \
 	$(top_builddir)/src/gallium/auxiliary/pipe-loader/libpipe_loader_dynamic.la
 
 endif # HAVE_GALLIUM_STATIC_TARGETS
+
+if HAVE_SHARED_GLAPI
+gallium_dri_la_LIBADD += $(top_builddir)/src/mapi/shared-glapi/libglapi.la
+else
+gallium_dri_la_LIBADD += $(top_builddir)/src/mapi/glapi/libglapi.la
+endif
 
 if HAVE_MESA_LLVM
 gallium_dri_la_LIBADD += $(LLVM_LIBS)
