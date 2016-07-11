@@ -32,6 +32,9 @@ MESA_GLAPI_OUTPUTS = \
 if HAVE_APPLEDRI
 MESA_GLAPI_OUTPUTS += $(MESA_GLAPI_DIR)/glapi_gentable.c
 endif
+if HAVE_WINDOWSDRI
+MESA_GLAPI_OUTPUTS += $(MESA_GLAPI_DIR)/glapi_gentable.c
+endif
 
 MESA_GLAPI_ASM_OUTPUTS =
 if HAVE_X86_ASM
@@ -95,6 +98,10 @@ XORG_GLAPI_OUTPUTS = \
 	$(XORG_GLAPI_DIR)/dispatch.h
 
 if HAVE_APPLEDRI
+XORG_GLAPI_OUTPUTS += \
+	$(XORG_GLAPI_DIR)/glapi_gentable.c
+endif
+if HAVE_WINDOWSDRI
 XORG_GLAPI_OUTPUTS += \
 	$(XORG_GLAPI_DIR)/glapi_gentable.c
 endif
