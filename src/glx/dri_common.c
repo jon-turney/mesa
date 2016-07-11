@@ -73,6 +73,9 @@ dri_message(int level, const char *f, ...)
    }
 }
 
+#ifdef __CYGWIN__
+#define GL_LIB_NAME "cygGL-1.dll"
+#endif
 #ifndef GL_LIB_NAME
 #define GL_LIB_NAME "libGL.so.1"
 #endif
