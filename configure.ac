@@ -248,14 +248,11 @@ dnl Compiler macros
 DEFINES="-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS"
 AC_SUBST([DEFINES])
 case "$host_os" in
-linux*|*-gnu*|gnu*)
+linux*|*-gnu*|gnu*|cygwin*)
     DEFINES="$DEFINES -D_GNU_SOURCE"
     ;;
 solaris*)
     DEFINES="$DEFINES -DSVR4"
-    ;;
-cygwin*)
-    DEFINES="$DEFINES -D_XOPEN_SOURCE=700"
     ;;
 esac
 
