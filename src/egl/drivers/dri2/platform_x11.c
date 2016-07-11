@@ -253,11 +253,14 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
    config = dri2_get_dri_config(dri2_conf, type,
                                 dri2_surf->base.GLColorspace);
 
+#ifdef HAVE_XCB_DRI2
    if (dri2_dpy->dri2) {
       dri2_surf->dri_drawable =
 	 (*dri2_dpy->dri2->createNewDrawable)(dri2_dpy->dri_screen, config,
 					      dri2_surf);
-   } else {
+   } else
+#endif
+   {
       assert(dri2_dpy->swrast);
       dri2_surf->dri_drawable = 
          (*dri2_dpy->swrast->createNewDrawable)(dri2_dpy->dri_screen, config,
@@ -292,6 +295,7 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
       free(reply);
    }
 
+#ifdef HAVE_XCB_DRI2
    if (dri2_dpy->dri2) {
       xcb_void_cookie_t cookie;
       int conn_error;
@@ -312,7 +316,9 @@ dri2_x11_create_surface(_EGLDriver *drv, _EGLDisplay *disp, EGLint type,
          free(error);
          goto cleanup_dri_drawable;
       }
-   } else {
+   } else
+#endif
+   {
       if (type == EGL_PBUFFER_BIT) {
          dri2_surf->depth = _eglGetConfigKey(conf, EGL_BUFFER_SIZE);
       }
@@ -391,9 +397,12 @@ dri2_x11_destroy_surface(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *surf)
 
    (*dri2_dpy->core->destroyDrawable)(dri2_surf->dri_drawable);
    
+#ifdef HAVE_XCB_DRI2
    if (dri2_dpy->dri2) {
       xcb_dri2_destroy_drawable (dri2_dpy->conn, dri2_surf->drawable);
-   } else {
+   } else
+#endif
+   {
       assert(dri2_dpy->swrast);
       swrastDestroyDrawable(dri2_dpy, dri2_surf);
    }
@@ -406,6 +415,7 @@ dri2_x11_destroy_surface(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *surf)
    return EGL_TRUE;
 }
 
+#ifdef HAVE_XCB_DRI2
 /**
  * Process list of buffer received from the server
  *
@@ -719,6 +729,7 @@ dri2_x11_authenticate(_EGLDisplay *disp, uint32_t id)
 
    return dri2_x11_do_authenticate(dri2_dpy, id);
 }
+#endif /* HAVE_XCB_DRI2 */
 
 static EGLBoolean
 dri2_x11_add_configs_for_visuals(struct dri2_egl_display *dri2_dpy,
@@ -795,6 +806,7 @@ dri2_x11_add_configs_for_visuals(struct dri2_egl_display *dri2_dpy,
    return EGL_TRUE;
 }
 
+#ifdef HAVE_XCB_DRI2
 static EGLBoolean
 dri2_copy_region(_EGLDriver *drv, _EGLDisplay *disp,
 		 _EGLSurface *draw, xcb_xfixes_region_t region)
@@ -877,6 +889,7 @@ dri2_x11_swap_buffers_msc(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw,
 
    return swap_count;
 }
+#endif /* HAVE_XCB_DRI2 */
 
 static EGLBoolean
 dri2_x11_swap_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw)
@@ -884,6 +897,7 @@ dri2_x11_swap_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw)
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_surface *dri2_surf = dri2_egl_surface(draw);
 
+#ifdef HAVE_XCB_DRI2
    if (dri2_dpy->dri2) {
       if (dri2_x11_swap_buffers_msc(drv, disp, draw, 0, 0, 0) != -1) {
           return EGL_TRUE;
@@ -891,7 +905,9 @@ dri2_x11_swap_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw)
       /* Swap failed with a window drawable. */
       _eglError(EGL_BAD_NATIVE_WINDOW, __FUNCTION__);
       return EGL_FALSE;
-   } else {
+   } else
+#endif
+   {
       assert(dri2_dpy->swrast);
 
       dri2_dpy->core->swapBuffers(dri2_surf->dri_drawable);
@@ -899,6 +915,7 @@ dri2_x11_swap_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw)
    }
 }
 
+#ifdef HAVE_XCB_DRI2
 static EGLBoolean
 dri2_x11_swap_buffers_region(_EGLDriver *drv, _EGLDisplay *disp,
                              _EGLSurface *draw,
@@ -940,21 +957,26 @@ dri2_x11_post_sub_buffer(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw,
 
    return dri2_x11_swap_buffers_region(drv, disp, draw, 1, rect);
 }
+#endif /* HAVE_XCB_DRI2 */
 
 static EGLBoolean
 dri2_x11_swap_interval(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *surf,
                        EGLint interval)
 {
+#ifdef HAVE_XCB_DRI2
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    struct dri2_egl_surface *dri2_surf = dri2_egl_surface(surf);
+#endif
 
    if (interval > surf->Config->MaxSwapInterval)
       interval = surf->Config->MaxSwapInterval;
    else if (interval < surf->Config->MinSwapInterval)
       interval = surf->Config->MinSwapInterval;
 
+#ifdef HAVE_XCB_DRI2
    if (interval != surf->SwapInterval && dri2_dpy->swap_available)
       xcb_dri2_swap_interval(dri2_dpy->conn, dri2_surf->drawable, interval);
+#endif
 
    surf->SwapInterval = interval;
 
@@ -992,6 +1014,7 @@ dri2_x11_copy_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *surf,
    return EGL_TRUE;
 }
 
+#ifdef HAVE_XCB_DRI2
 static _EGLImage *
 dri2_create_image_khr_pixmap(_EGLDisplay *disp, _EGLContext *ctx,
 			     EGLClientBuffer buffer, const EGLint *attr_list)
@@ -1125,6 +1148,7 @@ dri2_x11_get_sync_values(_EGLDisplay *display, _EGLSurface *surface,
 
    return EGL_TRUE;
 }
+#endif /* HAVE_XCB_DRI2 */
 
 static struct dri2_egl_display_vtbl dri2_x11_swrast_display_vtbl = {
    .authenticate = NULL,
@@ -1144,6 +1168,7 @@ static struct dri2_egl_display_vtbl dri2_x11_swrast_display_vtbl = {
    .get_dri_drawable = dri2_surface_get_dri_drawable,
 };
 
+#ifdef HAVE_XCB_DRI2
 static struct dri2_egl_display_vtbl dri2_x11_display_vtbl = {
    .authenticate = dri2_x11_authenticate,
    .create_window_surface = dri2_x11_create_window_surface,
@@ -1162,6 +1187,7 @@ static struct dri2_egl_display_vtbl dri2_x11_display_vtbl = {
    .get_sync_values = dri2_x11_get_sync_values,
    .get_dri_drawable = dri2_surface_get_dri_drawable,
 };
+#endif
 
 static EGLBoolean
 dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
@@ -1235,6 +1261,7 @@ dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
    return EGL_FALSE;
 }
 
+#ifdef HAVE_XCB_DRI2
 static void
 dri2_x11_setup_swap_interval(struct dri2_egl_display *dri2_dpy)
 {
@@ -1470,12 +1497,14 @@ dri2_initialize_x11_dri2(_EGLDriver *drv, _EGLDisplay *disp)
 
    return EGL_FALSE;
 }
+#endif
 
 EGLBoolean
 dri2_initialize_x11(_EGLDriver *drv, _EGLDisplay *disp)
 {
    EGLBoolean initialized = EGL_TRUE;
 
+#ifdef HAVE_XCB_DRI2
    int x11_dri2_accel = (getenv("LIBGL_ALWAYS_SOFTWARE") == NULL);
 
    if (x11_dri2_accel) {
@@ -1489,7 +1518,9 @@ dri2_initialize_x11(_EGLDriver *drv, _EGLDisplay *disp)
 #ifdef HAVE_DRI3
       }
 #endif
-   } else {
+   } else
+#endif
+   {
       initialized = dri2_initialize_x11_swrast(drv, disp);
    }
 

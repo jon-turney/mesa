@@ -32,7 +32,9 @@
 
 #ifdef HAVE_X11_PLATFORM
 #include <xcb/xcb.h>
+#ifdef HAVE_XCB_DRI2
 #include <xcb/dri2.h>
+#endif
 #include <xcb/xfixes.h>
 #include <X11/Xlib-xcb.h>
 

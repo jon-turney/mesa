@@ -1902,7 +1902,14 @@ for plat in $egl_platforms; do
 		;;
 
 	x11)
-		PKG_CHECK_MODULES([XCB_DRI2], [x11-xcb xcb xcb-dri2 >= $XCBDRI2_REQUIRED xcb-xfixes])
+		egl_x11_modules="x11-xcb xcb-xfixes"
+		PKG_CHECK_EXISTS([xcb-dri2 >= $XCBDRI2_REQUIRED],[
+			DEFINES="$DEFINES -DHAVE_XCB_DRI2"
+			egl_x11_modules="$egl_x11_modules xcb-dri2 >= $XCBDRI2_REQUIRED"
+		])
+
+		# XCB_DRI2 is misnamed it's really EGL_X11 or something
+		PKG_CHECK_MODULES([XCB_DRI2], [$egl_x11_modules])
 		;;
 
 	drm)
