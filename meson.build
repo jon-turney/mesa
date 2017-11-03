@@ -261,7 +261,10 @@ endif
 
 _egl = get_option('egl')
 if _egl == 'auto'
-  with_egl = with_dri and with_shared_glapi and egl_native_platform != ''
+  with_egl = (
+    with_dri and with_shared_glapi and egl_native_platform != '' and not
+    ['darwin', 'windows', 'cygwin'].contains(host_machine.system())
+  )
 elif _egl == 'true'
   if not with_dri
     error('EGL requires dri')
