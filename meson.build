@@ -208,6 +208,8 @@ _platforms = get_option('platforms')
 if _platforms == 'auto'
   if ['linux'].contains(host_machine.system())
     _platforms = 'x11,wayland,drm,surfaceless'
+  elif ['darwin', 'windows', 'cygwin'].contains(host_machine.system())
+    _platforms = 'x11,surfaceless'
   else
     error('Unknown OS, no platforms enabled. Patches gladly accepted to fix this.')
   endif
