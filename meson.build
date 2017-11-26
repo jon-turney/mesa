@@ -208,6 +208,8 @@ _platforms = get_option('platforms')
 if _platforms == 'auto'
   if ['linux'].contains(host_machine.system())
     _platforms = 'x11,wayland,drm,surfaceless'
+  elif ['darwin', 'windows', 'cygwin'].contains(host_machine.system())
+    _platforms = 'x11,surfaceless'
   else
     error('Unknown OS, no platforms enabled. Patches gladly accepted to fix this.')
   endif
@@ -261,7 +263,10 @@ endif
 
 _egl = get_option('egl')
 if _egl == 'auto'
-  with_egl = with_dri and with_shared_glapi and egl_native_platform != ''
+  with_egl = (
+    with_dri and with_shared_glapi and egl_native_platform != '' and not
+    ['darwin', 'windows', 'cygwin'].contains(host_machine.system())
+  )
 elif _egl == 'true'
   if not with_dri
     error('EGL requires dri')
@@ -375,6 +380,8 @@ if with_platform_x11
     endif
     if with_dri_platform == 'drm'
       pre_args += '-DGLX_USE_DRM'
+     elif with_dri_platform == 'windows'
+      pre_args += '-DGLX_USE_WINDOWSGL'
     endif
   endif
 else
@@ -462,7 +469,7 @@ if cc.compiles('int foo(void) { return 0; } int bar(void) __attribute__((alias("
 endif
 
 # TODO: this is very incomplete
-if host_machine.system() == 'linux'
+if ['linux', 'cygwin'].contains(host_machine.system())
   pre_args += '-D_GNU_SOURCE'
 endif
 
@@ -861,7 +868,7 @@ if with_platform_x11
     dep_x11 = dependency('x11')
     dep_xext = dependency('xext')
     dep_xcb = dependency('xcb')
-  elif with_glx == 'dri' and with_dri_platform == 'drm'
+  elif with_glx == 'dri'
     dep_x11 = dependency('x11')
     dep_xext = dependency('xext')
     dep_xdamage = dependency('xdamage', version : '>= 1.1')
@@ -869,9 +876,11 @@ if with_platform_x11
     dep_xcb_glx = dependency('xcb-glx', version : '>= 1.8.1')
     dep_xxf86vm = dependency('xxf86vm', required : false)
   endif
-  if with_any_vk or (with_glx == 'dri' and with_dri_platform == 'drm')
+  if with_any_vk or with_glx == 'dri'
     dep_xcb = dependency('xcb')
     dep_x11_xcb = dependency('x11-xcb')
+  endif
+  if with_any_vk or (with_glx == 'dri' and with_dri_platform == 'drm')
     dep_xcb_dri2 = dependency('xcb-dri2', version : '>= 1.8')
 
     if with_dri3
@@ -883,7 +892,9 @@ if with_platform_x11
     endif
   endif
   if with_glx == 'dri'
-    dep_dri2proto = dependency('dri2proto', version : '>= 2.8')
+    if with_dri_platform == 'drm'
+      dep_dri2proto = dependency('dri2proto', version : '>= 2.8')
+    endif
     dep_glproto = dependency('glproto', version : '>= 1.4.14')
   endif
   if with_egl
