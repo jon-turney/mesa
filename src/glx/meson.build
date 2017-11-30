@@ -65,7 +65,7 @@ extra_libs_libglx = []
 extra_deps_libgl = []
 extra_ld_args_libgl = []
 
-if with_dri
+if with_dri or with_gallium
   files_libglx += files(
     'dri_common.c',
     'dri_common.h',

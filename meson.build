@@ -322,8 +322,8 @@ if with_glx != 'disabled'
     if with_dri
       error('xlib conflicts with any dri driver')
     endif
-  elif with_glx == 'dri' and not with_dri
-    error('dri based GLX requires at least one DRI driver')
+  elif with_glx == 'dri' and not (with_dri or with_gallium)
+    error('dri based GLX requires at least one DRI or gallium driver')
   endif
 endif
 
