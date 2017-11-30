@@ -383,6 +383,26 @@ tss_set(tss_t key, void *val)
 /*-------------------- 7.25.7 Time functions --------------------*/
 // 7.25.6.1
 #ifndef HAVE_TIMESPEC_GET
+
+#if defined(__MACH__) && __MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+#include <mach/clock.h>
+#include <mach/mach.h>
+
+#define CLOCK_REALTIME 0
+
+static inline void
+clock_gettime(int lock, struct timespec *tp)
+{
+   clock_serv_t cclock;
+   mach_timespec_t mts;
+   host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+   clock_get_time(cclock, &mts);
+   mach_port_deallocate(mach_task_self(), cclock);
+   tp->tv_sec = mts.tv_sec;
+   tp->tv_nsec = mts.tv_nsec;
+}
+#endif
+
 static inline int
 timespec_get(struct timespec *ts, int base)
 {
