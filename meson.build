@@ -594,7 +594,7 @@ endif
 
 gl_pkgconfig_c_flags = []
 if with_platform_x11
-  if with_any_vk or (with_glx == 'dri' and with_dri_platform == 'drm')
+  if with_any_vk or with_glx == 'dri'
     pre_args += '-DHAVE_X11_PLATFORM'
   endif
   if with_glx == 'xlib' or with_glx == 'gallium-xlib'
@@ -1149,7 +1149,7 @@ if with_platform_x11
     dep_xcb = dependency('xcb')
     dep_x11_xcb = dependency('x11-xcb')
   endif
-  if with_any_vk or (with_glx == 'dri' and with_dri_platform == 'drm')
+  if with_any_vk or with_glx == 'dri'
     dep_xcb_dri2 = dependency('xcb-dri2', version : '>= 1.8')
 
     if with_dri3
