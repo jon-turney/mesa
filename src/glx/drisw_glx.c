@@ -720,6 +720,27 @@ driswCreateScreen(int screen, struct glx_display *priv)
    extensions = psc->core->getExtensions(psc->driScreen);
    driswBindExtensions(psc, extensions);
 
+   /* XXX: is this no good for upstream as it would change the fbconfigs seen
+      by DRI2/3, it should work on a copy of the fbconfigs instead ??? */
+   for (struct glx_config *m = psc->base.configs; m; m = m->next) {
+      /* We will ignore any server performance caveats, since they don't
+         affect swrast performance */
+      m->visualRating = GLX_DONT_CARE;
+
+      /* swrast doesn't provide any aux buffers, but XWin may (with some
+         drivers) provide them for all configs, so set the number to zero.
+
+         This could potentially create duplicate fbconfigs, but that isn't
+         forbidden. */
+      m->numAuxBuffers = 0;
+   }
+
+   for (struct glx_config *m = psc->base.visuals; m; m = m->next) {
+      /* Ditto for visuals */
+      m->visualRating = GLX_DONT_CARE;
+      m->numAuxBuffers = 0;
+   }
+
    configs = driConvertConfigs(psc->core, psc->base.configs, driver_configs);
    visuals = driConvertConfigs(psc->core, psc->base.visuals, driver_configs);
 
