@@ -376,10 +376,24 @@ windows_extensions_test(HDC hdc, void *args)
    r->wgl_extensions = strdup(wglGetExtensionsStringARB(hdc));
 }
 
+typedef BOOL (WINAPI *PFNSPDI)();
+
 void
 windows_extensions(char **gl_extensions, char **wgl_extensions)
 {
    windows_extensions_result result;
+
+   /*
+      We don't want dpi virtualisation for any OpenGL windows.
+      (must occur before any windows are created)
+   */
+   HMODULE hMod = GetModuleHandle("user32.dll");
+   if (hMod) {
+      PFNSPDI pFnSPDI = (PFNSPDI)GetProcAddress(hMod, "SetProcessDPIAware");
+      if (pFnSPDI) {
+         (*pFnSPDI)();
+      }
+   }
 
    *gl_extensions = "";
    *wgl_extensions = "";
